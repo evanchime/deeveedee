@@ -71,11 +71,9 @@ app.get('/webhook', function(req, res) {
 // Message handler
 // Accepts POST requests at /webhook endpoint
 app.post("/webhook", (req, res) => {
-  // Parse the request body from the POST
-  let body = req.body;
 
   // Check the Incoming webhook message
-  console.log(JSON.stringify(req.body, null, 2));
+  console.log(JSON.stringify(req.body, null, 2))
 
   // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
   if (req.body.object) {
@@ -86,10 +84,14 @@ app.post("/webhook", (req, res) => {
       req.body.entry[0].changes[0].value.messages &&
       req.body.entry[0].changes[0].value.messages[0]
     ) {
-      let phone_number_id =
-        req.body.entry[0].changes[0].value.metadata.phone_number_id;
-      let from = req.body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
-      let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
+      // Return a '200 OK' response to all requests
+      res.status(200).send("EVENT_RECEIVED") 
+
+      // Extract the phone number from the webhook payload
+      let from = req.body.entry[0].changes[0].value.messages[0].from
+      // Extract the message text from the webhook payload
+      let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
+
       // Send the message to openai
       getCompletionAssistant(thisSession, msg_body)
       .then(msg => {
@@ -98,19 +100,19 @@ app.post("/webhook", (req, res) => {
       })
       .catch(err => {
       console.error(
-          "Got an error from Openai bot: ",
-          err.stack || err
+        "Got an error from Openai bot: ",
+        err.stack || err
       )
       })
     }
-    res.sendStatus(200);
   } else {
     // Return a '404 Not Found' if event is not from a WhatsApp API
-    res.sendStatus(404);
+    res.sendStatus(404)
   }
-});
-
+})
+        
 app.listen(port, ()=>{
     console.log(`Server listening on port ${port}...`)
 })
+
 
