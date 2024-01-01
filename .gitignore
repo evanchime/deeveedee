@@ -6,3 +6,6 @@ npm-debug.log
 *.env
 *.dev
 .DS_Store
+
+# Environment variables configuration
+set_config_var.sh

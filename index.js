@@ -75,6 +75,7 @@ app.post('/webhook', (req, res)  => {
   
   // Log the request body and event notification to console
   console.log(`\u{1F7EA} Received webhook:`)
+  console.log(JSON.stringify(req.body, null, 2))
   console.dir(body, { depth: null })
 
   // Process the Whatsapp updates here
