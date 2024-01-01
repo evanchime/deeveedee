@@ -69,62 +69,46 @@ app.get('/webhook', function(req, res) {
 })
 
 // Message handler
-app.post('/webhook', (req, res)  => {
+// Accepts POST requests at /webhook endpoint
+app.post("/webhook", (req, res) => {
   // Parse the request body from the POST
   let body = req.body;
-  
-  // Log the request body and event notification to console
-  console.log(`\u{1F7EA} Received webhook:`)
-  console.log(JSON.stringify(req.body, null, 2))
-  console.dir(body, { depth: null })
 
-  // Process the Whatsapp updates here
-  // Check if this is an event from a whatsapp_business_account subscription
-  if (body.object === "whatsapp_business_account") {
-      // Returns a '200 OK' response to all requests
-      res.status(200).send("EVENT_RECEIVED")
+  // Check the Incoming webhook message
+  console.log(JSON.stringify(req.body, null, 2));
 
-      // The sender's id
-      let from
-      // The message text
-      let message
-
-      // Process the message here
-      if (body.entry[0].changes[0].value.messages[0].type === "text" && 
-          !body.entry[0].changes[0].value.messages[0].referral && 
-          !body.entry[0].changes[0].value.messages[0].context) {
-              
-              // Get the sender's id
-              from = body.entry[0].changes[0].value.messages[0].from
-              // Extract the message text from the webhook payload
-              message = body.entry[0].changes[0].value.messages[0].text.body
-
-              // Send the message to openai
-              getCompletionAssistant(thisSession, message)
-                  .then(msg => {
-                  console.dir(thisSession, {depth: null})
-                  whatsappMessage(from, message)
-                  })
-                  .catch(err => {
-                  console.error(
-                      "Got an error from Openai bot: ",
-                      err.stack || err
-                  )
-                  })
-      }else {
-          // We received an event that is not a text message
-          // Let's reply with an automatic message
-          whatsappMessage(
-            from,
-            "Sorry I can only process text messages to this number for now."
-          ).catch(console.error)
-          console.log("received event", JSON.stringify(body))
-      }
-  }else {
-      // Returns a '404 Not Found' if event is not from whatsapp_business_account
-      res.sendStatus(404)
+  // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
+  if (req.body.object) {
+    if (
+      req.body.entry &&
+      req.body.entry[0].changes &&
+      req.body.entry[0].changes[0] &&
+      req.body.entry[0].changes[0].value.messages &&
+      req.body.entry[0].changes[0].value.messages[0]
+    ) {
+      let phone_number_id =
+        req.body.entry[0].changes[0].value.metadata.phone_number_id;
+      let from = req.body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
+      let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
+      // Send the message to openai
+      getCompletionAssistant(thisSession, msg_body)
+      .then(msg => {
+      console.dir(thisSession, {depth: null})
+      whatsappMessage(from, msg)
+      })
+      .catch(err => {
+      console.error(
+          "Got an error from Openai bot: ",
+          err.stack || err
+      )
+      })
+    }
+    res.sendStatus(200);
+  } else {
+    // Return a '404 Not Found' if event is not from a WhatsApp API
+    res.sendStatus(404);
   }
-})
+});
 
 app.listen(port, ()=>{
     console.log(`Server listening on port ${port}...`)
