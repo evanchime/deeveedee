@@ -87,15 +87,14 @@ app.post("/webhook", (req, res) => {
       // Return a '200 OK' response to all requests
       res.status(200).send("EVENT_RECEIVED") 
 
-      // Extract the phone number from the webhook payload
+      // Extract the sender's phone number from the webhook payload
       let from = req.body.entry[0].changes[0].value.messages[0].from
       // Extract the message text from the webhook payload
       let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
 
-      // Send the message to openai
+      // Send the message to openai for processing
       getCompletionAssistant(thisSession, msg_body)
       .then(msg => {
-      console.dir(thisSession, {depth: null})
       whatsappMessage(from, msg)
       })
       .catch(err => {
