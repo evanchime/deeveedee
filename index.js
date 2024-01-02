@@ -82,7 +82,9 @@ app.post("/webhook", (req, res) => {
       req.body.entry[0].changes &&
       req.body.entry[0].changes[0] &&
       req.body.entry[0].changes[0].value.messages &&
-      req.body.entry[0].changes[0].value.messages[0]
+      req.body.entry[0].changes[0].value.messages[0] &&
+      !req.body.entry[0].changes[0].value.messages[0].context &&
+      !req.body.entry[0].changes[0].value.messages[0].referral
     ) {
       // Return a '200 OK' response to all requests
       res.status(200).send("EVENT_RECEIVED") 
