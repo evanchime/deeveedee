@@ -27,7 +27,7 @@ app.use(
     resave: false, // required: force lightweight session keep alive (touch)
     saveUninitialized: false, // recommended: only save session when data exists
     secret: config.sessSecret,
-    cookie: {secure: true}
+    cookie: {secure: true, maxAge: 1800000}
   })
 )
 
