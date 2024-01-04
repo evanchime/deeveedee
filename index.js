@@ -72,8 +72,16 @@ app.get('/webhook', function(req, res) {
 // Accepts POST requests at /webhook endpoint
 app.post("/webhook", (req, res) => {
 
+  // Log the session id
+  console.log(req.session.id)
+
+
+  
+  console.log(` this is this session ${thisSession} `)
+  
   // Check the Incoming webhook message
   console.log(JSON.stringify(req.body, null, 2))
+
 
   // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
   if (req.body.object) {
