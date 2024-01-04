@@ -73,10 +73,10 @@ app.get('/webhook', function(req, res) {
 app.post("/webhook", (req, res) => {
 
   // Log the session id
-  console.log(req.session.id)
+  console.log(`this is session id ${req.session.id} `)
 
 
-  
+
   console.log(` this is this session ${thisSession} `)
   
   // Check the Incoming webhook message
