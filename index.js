@@ -77,7 +77,8 @@ app.post("/webhook", (req, res) => {
 
 
 
-  console.log(` this is this session ${thisSession} `)
+  // console.log(` this is this session ${thisSession} `)
+  console.log(JSON.stringify(thisSession, null, 2))
   
   // Check the Incoming webhook message
   console.log(JSON.stringify(req.body, null, 2))
