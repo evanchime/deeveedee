@@ -21,6 +21,13 @@ let redisStore = new RedisStore({
   client: redisClient,
 })
 
+redisClient.on('error', function (err) {
+  console.log('Could not establish a connection with redis. ' + err);
+});
+redisClient.on('connect', function (err) {
+  console.log('Connected to redis successfully');
+});
+
 
 // Initialize sesssion storage.
 app.use(
@@ -77,7 +84,7 @@ app.post("/webhook", (req, res) => {
 
   // Log the session id
   console.log(`this is session id ${req.session.id} `)
-  console.log(`this is session ${req.session} `)
+  console.log(`this is session ${JSON.stringify(req.session)} `)
 
 
 
@@ -110,7 +117,8 @@ app.post("/webhook", (req, res) => {
 
       // Send the message to openai for processing
       //DEBUG
-      getCompletionAssistant(/*thisSession*/req.session, msg_body)
+      const sess = req.session
+      getCompletionAssistant(/*thisSession*/sess, msg_body)
       .then(msg => {
       whatsappMessage(from, msg)
       })
