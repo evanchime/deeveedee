@@ -13,12 +13,14 @@ const app = express()
 
 // Initialize client.
 let redisClient = createClient({host: process.env.REDIS_URL})
+// let redisClient = createClient()
 // redisClient.connect().catch(console.error)
 
 // Initialize store.
 let redisStore = new RedisStore({
   client: redisClient,
 })
+
 
 // Initialize sesssion storage.
 app.use(
@@ -85,52 +87,24 @@ app.post("/webhook", (req, res) => {
 
 
   // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
-//   if (req.body.object) {
-//     if (
-//       req.body.entry &&
-//       req.body.entry[0].changes &&
-//       req.body.entry[0].changes[0] &&
-//       req.body.entry[0].changes[0].value.messages &&
-//       req.body.entry[0].changes[0].value.messages[0] &&
-//       !req.body.entry[0].changes[0].value.messages[0].context &&
-//       !req.body.entry[0].changes[0].value.messages[0].referral
-//     ) {
-//       // Return a '200 OK' response to all requests
-//       res.status(200).send("EVENT_RECEIVED") 
-
-//       // Extract the sender's phone number from the webhook payload
-//       let from = req.body.entry[0].changes[0].value.messages[0].from
-//       // Extract the message text from the webhook payload
-//       let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
-
-//       // Send the message to openai for processing
-//       getCompletionAssistant(thisSession, msg_body)
-//       .then(msg => {
-//       whatsappMessage(from, msg)
-//       })
-//       .catch(err => {
-//       console.error(
-//         "Got an error from Openai bot: ",
-//         err.stack || err
-//       )
-//       })
-//     }
-//   } else {
-//     // Return a '404 Not Found' if event is not from a WhatsApp API
-//     res.sendStatus(404)
-//   }
-if (req.body.object === "whatsapp_business_account") {
-  if (req.body.entry[0].changes[0].value.messages[0] &&
-    !req.body.entry[0].changes[0].value.messages[0].context &&
-    !req.body.entry[0].changes[0].value.messages[0].referral) {
+  if (req.body.object) {
+    if (
+      req.body.entry &&
+      req.body.entry[0].changes &&
+      req.body.entry[0].changes[0] &&
+      req.body.entry[0].changes[0].value.messages &&
+      req.body.entry[0].changes[0].value.messages[0] &&
+      !req.body.entry[0].changes[0].value.messages[0].context &&
+      !req.body.entry[0].changes[0].value.messages[0].referral
+    ) {
       // Return a '200 OK' response to all requests
       res.status(200).send("EVENT_RECEIVED") 
-  
+
       // Extract the sender's phone number from the webhook payload
       let from = req.body.entry[0].changes[0].value.messages[0].from
       // Extract the message text from the webhook payload
       let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
-  
+
       // Send the message to openai for processing
       getCompletionAssistant(thisSession, msg_body)
       .then(msg => {
@@ -142,18 +116,11 @@ if (req.body.object === "whatsapp_business_account") {
         err.stack || err
       )
       })
-    
-  } else if (req.body.entry[0].changes[0].value.statutes[0].status === "delivered") {
-    // Return a '200 OK' for status delivered status
-     res.status(200).send("status delivered received") 
-  } else if (req.body.entry[0].changes[0].value.statutes[0].status === "sent") {
-    // Return a '200 OK' for status sent status
-    res.status(200).send("status sent received")
+    }
+  } else {
+    // Return a '404 Not Found' if event is not from a WhatsApp API
+    res.sendStatus(404)
   }
-}else {
-  // Return a '404 Not Found' if event is not from a WhatsApp API
-  res.sendStatus(404)
-}
 }
 )
         
