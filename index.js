@@ -6,32 +6,32 @@ const config = require("./services/config")
 const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
 const getCompletionAssistant = require("./services/openAI/getCompletionAssistant")
-// const session = require("express-session")
-// const RedisStore = require("connect-redis").default
-// const {createClient} = require("redis")
+const session = require("express-session")
+const RedisStore = require("connect-redis").default
+const {createClient} = require("redis")
 const app = express()
 
 // // Initialize client.
-// let redisClient = createClient({host: process.env.REDIS_URL})
+let redisClient = createClient({host: process.env.REDIS_URL})
 // // let redisClient = createClient()
 // // redisClient.connect().catch(console.error)
 
 // // Initialize store.
-// let redisStore = new RedisStore({
-//   client: redisClient,
-// })
+let redisStore = new RedisStore({
+  client: redisClient,
+})
 
 
-// // Initialize sesssion storage.
-// app.use(
-//   session({
-//     store: redisStore,
-//     resave: false, // required: force lightweight session keep alive (touch)
-//     saveUninitialized: false, // recommended: only save session when data exists
-//     secret: config.sessSecret,
-//     cookie: {secure: true, maxAge: 1800000}
-//   })
-// )
+// Initialize sesssion storage.
+app.use(
+  session({
+    store: redisStore,
+    resave: false, // required: force lightweight session keep alive (touch)
+    saveUninitialized: false, // recommended: only save session when data exists
+    secret: config.sessSecret,
+    cookie: {secure: true, maxAge: 1800000}
+  })
+)
 
 // Log response status, request method and url
 app.use(({ method, url }, rsp, next) => {
@@ -55,7 +55,8 @@ const port = config.port
 const token = config.metaVerifyToken
 
 //Create session variable
-const thisSession = {}
+//DEBUG
+//const thisSession = {}
 
 // Webhook setup
 app.get('/webhook', function(req, res) {
@@ -75,12 +76,14 @@ app.get('/webhook', function(req, res) {
 app.post("/webhook", (req, res) => {
 
   // Log the session id
-  //console.log(`this is session id ${req.session.id} `)
+  console.log(`this is session id ${req.session.id} `)
+  console.log(`this is session ${req.session} `)
 
 
 
   // console.log(` this is this session ${thisSession} `)
-  console.log(JSON.stringify(thisSession, null, 2))
+  //DEBUG
+  //console.log(JSON.stringify(thisSession, null, 2))
   
   // Check the Incoming webhook message
   console.log(JSON.stringify(req.body, null, 2))
@@ -106,7 +109,8 @@ app.post("/webhook", (req, res) => {
       let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
 
       // Send the message to openai for processing
-      getCompletionAssistant(thisSession, msg_body)
+      //DEBUG
+      getCompletionAssistant(/*thisSession*/req.session, msg_body)
       .then(msg => {
       whatsappMessage(from, msg)
       })
