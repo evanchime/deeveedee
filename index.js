@@ -13,20 +13,13 @@ const app = express()
 
 // // Initialize client.
 let redisClient = createClient({host: process.env.REDIS_URL})
-// // let redisClient = createClient()
-// // redisClient.connect().catch(console.error)
+// let redisClient = createClient() // for local testing
+redisClient.connect().catch(console.error)
 
 // // Initialize store.
 let redisStore = new RedisStore({
   client: redisClient,
 })
-
-redisClient.on('error', function (err) {
-  console.log('Could not establish a connection with redis. ' + err);
-});
-redisClient.on('connect', function (err) {
-  console.log('Connected to redis successfully');
-});
 
 
 // Initialize sesssion storage.
@@ -117,9 +110,11 @@ app.post("/webhook", (req, res) => {
 
       // Send the message to openai for processing
       //DEBUG
-      const sess = req.session
-      getCompletionAssistant(/*thisSession*/sess, msg_body)
+      getCompletionAssistant(/*thisSession*/req.session, msg_body)
       .then(msg => {
+        console.log("Got a response from Openai bot: ", msg)
+        console.log(`this is session now ${JSON.stringify(req.session)} `)
+        // Send the message to the user
       whatsappMessage(from, msg)
       })
       .catch(err => {
