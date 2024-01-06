@@ -114,6 +114,7 @@ app.post("/webhook", (req, res) => {
       .then(msg => {
         console.log("Got a response from Openai bot: ", msg)
         console.log(`this is session now ${JSON.stringify(req.session)} `)
+        req.session.save()
         // Send the message to the user
       whatsappMessage(from, msg)
       })
