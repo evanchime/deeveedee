@@ -21,15 +21,12 @@ let redisStore = new RedisStore({
   client: redisClient,
 })
 
-app.set("trust proxy", 1) // trust first proxy
-
-
 // Initialize sesssion storage.
 app.use(
   session({
     store: redisStore,
     resave: false, // required: force lightweight session keep alive (touch)
-    saveUninitialized: true, // recommended: only save session when data exists
+    saveUninitialized: false, // recommended: only save session when data exists
     secret: config.sessSecret,
     cookie: {secure: true, maxAge: 1800000}
   })
