@@ -14,7 +14,13 @@ const app = express()
 // // Initialize client.
 let redisClient = createClient({url: process.env.REDIS_URL})
 // let redisClient = createClient() // for local testing
-redisClient.connect().catch(console.error)
+// redisClient.connect().catch(console.error)
+redisClient.on("error", console.error)
+.on("connect", () => console.log("Redis client connected"))
+.on("ready", () => console.log("Redis client ready"))
+.on("reconnecting", () => console.log("Redis client reconnecting"))
+.on("end", () => console.log("Redis client disconnected"))
+
 
 // // Initialize store.
 let redisStore = new RedisStore({
