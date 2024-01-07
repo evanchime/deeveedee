@@ -12,7 +12,7 @@ const {createClient} = require("redis")
 const app = express()
 
 // // Initialize client.
-let redisClient = createClient({host: process.env.REDIS_URL})
+let redisClient = createClient({url: process.env.REDIS_URL})
 // let redisClient = createClient() // for local testing
 redisClient.connect().catch(console.error)
 
