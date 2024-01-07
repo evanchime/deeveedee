@@ -12,7 +12,13 @@ const {createClient} = require("redis")
 const app = express()
 
 // // Initialize client.
-let redisClient = createClient({url: process.env.REDIS_URL})
+const redisClient = createClient({
+  url: process.env.REDIS_URL,
+  socket: {
+    tls: true,
+    rejectUnauthorized: false
+  }
+})
 // let redisClient = createClient() // for local testing
 // redisClient.connect().catch(console.error)
 redisClient.on("error", console.error)
