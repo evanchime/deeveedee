@@ -29,7 +29,7 @@ app.use(
     resave: false, // required: force lightweight session keep alive (touch)
     saveUninitialized: false, // recommended: only save session when data exists
     secret: config.sessSecret,
-    cookie: {secure: true, maxAge: 1800000}
+    cookie: {secure: false, maxAge: 1800000}
   })
 )
 
@@ -114,7 +114,6 @@ app.post("/webhook", (req, res) => {
       .then(msg => {
         console.log("Got a response from Openai bot: ", msg)
         console.log(`this is session now ${JSON.stringify(req.session)} `)
-        req.session.save()
         // Send the message to the user
       whatsappMessage(from, msg)
       })
