@@ -14,7 +14,8 @@ const ENV_VARS = [
   "WHATSAPP_APP_SECRET",
   "META_VERIFY_TOKEN",
   "WHATSAPP_PHONE_NUMBER_ID",
-  "SESSION_SECRET"
+  "SESSION_SECRET",
+  "REDIS_STORE_SECRET"
 ];
 
 module.exports = {
@@ -29,6 +30,7 @@ module.exports = {
   openaiApiKey: process.env.OPENAI_API_KEY,
   whatsappPhoneNumberID: process.env.WHATSAPP_PHONE_NUMBER_ID,
   sessSecret: process.env.SESSION_SECRET,
+  redisStoreSecret: process.env.REDIS_STORE_SECRET,
 
   // Preferred port (default to 3000)
   port: process.env.PORT || 3000,

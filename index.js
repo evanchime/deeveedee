@@ -12,20 +12,43 @@ const {createClient} = require("redis")
 const app = express()
 
 // // Initialize client.
+// const redisClient = createClient({
+//   url: process.env.REDIS_URL,
+//   socket: {
+//     tls: true,
+//     rejectUnauthorized: false
+//   }
+// })
+// // let redisClient = createClient() // for local testing
+// // redisClient.connect().catch(console.error)
+// redisClient.on("error", console.error)
+// .on("connect", () => console.log("Redis client connected"))
+// .on("ready", () => console.log("Redis client ready"))
+// .on("reconnecting", () => console.log("Redis client reconnecting"))
+// .on("end", () => console.log("Redis client disconnected"))
+
+
 const redisClient = createClient({
-  url: process.env.REDIS_URL,
+  username: 'default', // use your Redis user. More info https://redis.io/docs/management/security/acl/
+  password: config.redisStoreSecret, // use your password here
   socket: {
-    tls: true,
-    rejectUnauthorized: false
+    host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
+    port: 11258
+    // rejectUnauthorized: false
+
   }
 })
-// let redisClient = createClient() // for local testing
-// redisClient.connect().catch(console.error)
-redisClient.on("error", console.error)
+.on('error', (err) => console.log('Redis Client Error', err))
 .on("connect", () => console.log("Redis client connected"))
 .on("ready", () => console.log("Redis client ready"))
 .on("reconnecting", () => console.log("Redis client reconnecting"))
 .on("end", () => console.log("Redis client disconnected"))
+.connect()
+
+
+// redisClient.on('error', (err) => console.log('Redis Client Error', err));
+
+// await redisClient.connect();
 
 
 // // Initialize store.
