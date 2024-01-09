@@ -75,6 +75,15 @@ app.use(({ method, url }, rsp, next) => {
   next()
 })
 
+app.use((req, res, next) => {
+  if (req.method === "POST" && req.path === "/webhook") {
+    if (!req.session) {
+      return res.status(401).json({message: "Session expired"})
+    }
+  }
+  next()
+})
+
 // Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}))
 
