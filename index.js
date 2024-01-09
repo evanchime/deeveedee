@@ -63,7 +63,7 @@ app.use(
     resave: false, // required: force lightweight session keep alive (touch)
     saveUninitialized: false, // recommended: only save session when data exists
     secret: config.sessSecret,
-    cookie: {secure: true, maxAge: 1800000}
+    cookie: {maxAge: 1800000}
   })
 )
 
@@ -134,8 +134,8 @@ app.post("/webhook", (req, res) => {
       !req.body.entry[0].changes[0].value.messages[0].context &&
       !req.body.entry[0].changes[0].value.messages[0].referral
     ) {
-      // Return a '200 OK' response to all requests
-      res.status(200).send("EVENT_RECEIVED") 
+      // // Return a '200 OK' response to all requests
+      // res.status(200).send("EVENT_RECEIVED") 
 
       // Extract the sender's phone number from the webhook payload
       let from = req.body.entry[0].changes[0].value.messages[0].from
@@ -158,12 +158,13 @@ app.post("/webhook", (req, res) => {
       )
       })
     }
+    // Return a '200 OK' response to all requests
+    res.status(200).send("EVENT_RECEIVED") 
   } else {
     // Return a '404 Not Found' if event is not from a WhatsApp API
     res.sendStatus(404)
   }
-}
-)
+})
         
 app.listen(port, ()=>{
     console.log(`Server listening on port ${port}...`)
