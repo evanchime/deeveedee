@@ -81,8 +81,8 @@ app.use((req, res, next) => {
       console.log("Session is not initialized")
       return res.status(500).end()
     }
-    req.session.sessInfo = req.session.sessInfo || 1
-    console.log(`this is sessinfo ${req.session.sessInfo++}`)
+    req.session.sessData = req.session.sessData || 1
+    console.log(`this is sessinfo ${req.session.sessData++}`)
   }
   next()
 })
