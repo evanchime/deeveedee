@@ -7,27 +7,61 @@ const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
 const getCompletionAssistant = require("./services/openAI/getCompletionAssistant")
 const session = require("express-session")
-const RedisStore = require("connect-redis").default
-const {createClient} = require("redis")
+// const MongoDBStore = require('connect-mongodb-session')(session);
+const RedisStore = require("connect-redis")(session)
+const Redis = require("ioredis")
+
+// Initialize client.
+const redisClient = new Redis({
+  host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
+  port: 11258,
+  password: config.redisStoreSecret,
+  // tls: {
+  //   rejectUnauthorized: false
+  // }
+})
+  .on("error", console.error)
+  .on("connect", () => console.log("Redis client connected"))
+  .on("ready", () => console.log("Redis client ready"))
+  .on("reconnecting", () => console.log("Redis client reconnecting"))
+  .on("end", () => console.log("Redis client disconnected"))
+
+  
+
+// // Initialize client.
+// const redisClient = new Redis()
+//   .on("error", console.error)
+//   .on("connect", () => console.log("Redis client connected"))
+//   .on("ready", () => console.log("Redis client ready"))
+//   .on("reconnecting", () => console.log("Redis client reconnecting"))
+//   .on("end", () => console.log("Redis client disconnected"))
+
+// const {createClient} = require("redis")
 const app = express()
 
 // // Initialize client.
-const redisClient = createClient({
-  url: process.env.REDIS_URL,
-  socket: {
-    tls: true,
-    rejectUnauthorized: false
-  }
-})
-.on("error", console.error)
-.on("connect", () => console.log("Redis client connected"))
-.on("ready", () => console.log("Redis client ready"))
-.on("reconnecting", () => console.log("Redis client reconnecting"))
-.on("end", () => console.log("Redis client disconnected"))
-.connect()
+// const redisClient = createClient({
+//   url: process.env.REDIS_URL,
+//   socket: {
+//     tls: true,
+//     rejectUnauthorized: false
+//   }
+// })
+// .on("error", console.error)
+// .on("connect", () => console.log("Redis client connected"))
+// .on("ready", () => console.log("Redis client ready"))
+// .on("reconnecting", () => console.log("Redis client reconnecting"))
+// .on("end", () => console.log("Redis client disconnected"))
+// .connect()
 
-// let redisClient = createClient() // for local testing
-// redisClient.connect().catch(console.error)
+// for local testing
+// let redisClient = createClient() 
+// .on("error", console.error)
+// .on("connect", () => console.log("Redis client connected"))
+// .on("ready", () => console.log("Redis client ready"))
+// .on("reconnecting", () => console.log("Redis client reconnecting"))
+// .on("end", () => console.log("Redis client disconnected"))
+// .connect()
 
 
 // const redisClient = createClient({
@@ -77,17 +111,17 @@ app.use(({ method, url }, rsp, next) => {
   next()
 })
 
-app.use((req, res, next) => {
-  if (req.method === "POST" && req.path === "/webhook") {
-    if (!req.session) {
-      console.log("Session is not initialized")
-      return res.status(500).end()
-    }
-    req.session.sessData = req.session.sessData || 1
-    console.log(`this is sessinfo ${req.session.sessData++}`)
-  }
-  next()
-})
+// app.use((req, res, next) => {
+//   if (req.method === "POST" && req.path === "/webhook") {
+//     if (!req.session) {
+//       console.log("Session is not initialized")
+//       return res.status(500).end()
+//     }
+//     req.session.sessData = req.session.sessData || 1
+//     console.log(`this is sessinfo ${req.session.sessData++}`)
+//   }
+//   next()
+// })
 
 // Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}))
