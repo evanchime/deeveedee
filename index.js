@@ -195,7 +195,7 @@ app.post("/webhook", (req, res) => {
       getCompletionAssistant(/*thisSession*/req.session, msg_body)
       .then(msg => {
         console.log("Got a response from Openai bot: ", msg)
-        console.log(`this is session now ${JSON.stringify(req.session)} `)
+        console.log(`this is session info ${JSON.stringify(req.session.sessInfo)} `)
         // Send the message to the user
       whatsappMessage(from, msg)
       })
