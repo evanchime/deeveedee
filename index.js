@@ -5,8 +5,15 @@ const bodyParser = require("body-parser")
 const config = require("./services/config")
 const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
-const getCompletionAssistant = require("./services/openAI/getCompletionAssistant")
+const getCompletion = require("./services/openAI/getCompletion")
 const session = require("express-session")
+const OpenAI = require('openai')
+const createAssistant = require('./services/openAI/createAssistant')
+const createThread = require('./services/openAI/createThread')
+
+const openai = new OpenAI({
+    apiKey: config.openaiApiKey
+})
 // const MongoDBStore = require('connect-mongodb-session')(session);
 const RedisStore = require("connect-redis")(session)
 const Redis = require("ioredis")
@@ -97,7 +104,7 @@ app.use(
   session({
     store: redisStore,
     resave: false, // required: force lightweight session keep alive (touch)
-    saveUninitialized: true, // recommended: only save session when data exists
+    saveUninitialized: false, // recommended: only save session when data exists
     secret: config.sessSecret,
     cookie: {maxAge: 1800000}
   })
@@ -190,9 +197,37 @@ app.post("/webhook", (req, res) => {
       // Extract the message text from the webhook payload
       let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
 
+      if (!req.session.sessInfo) {
+        req.session.sessInfo = {
+          // Create the assistant for the first time
+          assistant: createAssistant(),
+          // Create the thread for the first time
+          thread: createThread()
+        }
+      }
+        
+      
+      // if (!req.session.sessInfo[from]) {
+        
+      //   // Create the assistant for the first time
+      //   const assistant = createAssistant()
+        
+      //   // Create the thread for the first time
+      //   const thread = createThread()
+
+      //   // Store the session
+      //   req.session.sessInfo[from] = {
+      //       assistant: assistant,
+      //       thread: thread
+      //   }
+      // }
+      
+            
+        
+
       // Send the message to openai for processing
       //DEBUG
-      getCompletionAssistant(/*thisSession*/req.session, msg_body)
+      getCompletion(/*thisSession*/req.session.sessInfo, msg_body)
       .then(msg => {
         console.log("Got a response from Openai bot: ", msg)
         console.log(`this is session info ${JSON.stringify(req.session.sessInfo)} `)
