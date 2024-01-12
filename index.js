@@ -7,13 +7,13 @@ const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
 const {getCompletion,createAssistant,createThread} = require("./services/openAI/getCompletion")
 const session = require("express-session")
-// const OpenAI = require('openai')
+ const OpenAI = require('openai')
 // const {createAssistant, c = require('./services/openAI/getCompletion')
 // const createThread = require('./services/openAI/createThread')
 
-// const openai = new OpenAI({
-//     apiKey: config.openaiApiKey
-// })
+const openai = new OpenAI({
+    apiKey: config.openaiApiKey
+})
 // const MongoDBStore = require('connect-mongodb-session')(session);
 const RedisStore = require("connect-redis")(session)
 const Redis = require("ioredis")
