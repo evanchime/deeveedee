@@ -1,3 +1,10 @@
+const OpenAI = require('openai')
+const config = require('../config')
+
+const openai = new OpenAI({
+    apiKey: config.openaiApiKey
+})
+
 const createAssistant = async () => {
     try {
         // Create an assistant with the specified parameters

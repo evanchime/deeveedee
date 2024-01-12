@@ -1,3 +1,10 @@
+const OpenAI = require('openai')
+const config = require('../config')
+
+const openai = new OpenAI({
+    apiKey: config.openaiApiKey
+})
+
 const createThread = async () => {
     try {
         // Create a new thread

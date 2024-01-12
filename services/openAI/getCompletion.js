@@ -1,9 +1,9 @@
-// const OpenAI = require('openai')
-// const config = require('../config')
+const OpenAI = require('openai')
+const config = require('../config')
 
-// const openai = new OpenAI({
-//     apiKey: config.openaiApiKey
-// })
+const openai = new OpenAI({
+    apiKey: config.openaiApiKey
+})
 
 const getCompletion = async (sessInfo, text) => {
     
