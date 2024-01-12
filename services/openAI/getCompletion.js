@@ -45,5 +45,32 @@ const getCompletion = async (sessInfo, text) => {
     return assistantResponse.content[0].text.value
 }
 
+const createAssistant = async () => {
+    try {
+        // Create an assistant with the specified parameters
+        const assistant = await openai.beta.assistants.create({
+            name: "Helpful Assistant",
+            instructions: "You are a helpful assistant.",
+            model: "gpt-4-1106-preview"
+        })
 
-module.exports = getCompletion
+        return { assistant };
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+const createThread = async () => {
+    try {
+        // Create a new thread
+        const thread = await openai.beta.threads.create()
+        return { thread }
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+
+module.exports = { getCompletion, createAssistant, createThread }
