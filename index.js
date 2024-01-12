@@ -201,8 +201,10 @@ app.post("/webhook", (req, res) => {
 
         // Create the assistant for the first time
         const assistant = createAssistant()
+        console.log(`this is assistant ${assistant.id}`)
         // Create the thread for the first time
         const thread = createThread()
+        console.log(`this is thread ${thread.id}`)
         // Store the session
         req.session.sessInfo = {
           assistant : assistant,
