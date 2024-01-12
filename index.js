@@ -198,11 +198,15 @@ app.post("/webhook", (req, res) => {
       let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
 
       if (!req.session.sessInfo) {
+
+        // Create the assistant for the first time
+        const assistant = createAssistant()
+        // Create the thread for the first time
+        const thread = createThread()
+        // Store the session
         req.session.sessInfo = {
-          // Create the assistant for the first time
-          assistant: createAssistant(),
-          // Create the thread for the first time
-          thread: createThread()
+          assistant : assistant,
+          thread : thread
         }
       }
         
