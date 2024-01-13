@@ -7,21 +7,21 @@ const openai = new OpenAI({
 
 const getCompletion = async (session, text) => {
     
-    // if (!session.sessInfo) {
-    //     // Create the assistant for the first time
-    //     const assistant = await openai.beta.assistants.create({
-    //         name: "Helpful Assistant",
-    //         instructions: "You are a helpful assistant.",
-    //         model: "gpt-4-1106-preview"
-    //     })
-    //     // Create the thread for the first time
-    //     const thread = await openai.beta.threads.create()
-    //     // Store the session
-    //     session.sessInfo = {
-    //         assistant: assistant,
-    //         thread: thread
-    //     }
-    // }
+    if (!session.sessInfo) {
+        // Create the assistant for the first time
+        const assistant = await openai.beta.assistants.create({
+            name: "Helpful Assistant",
+            instructions: "You are a helpful assistant.",
+            model: "gpt-4-1106-preview"
+        })
+        // Create the thread for the first time
+        const thread = await openai.beta.threads.create()
+        // Store the session
+        session.sessInfo = {
+            assistant: assistant,
+            thread: thread
+        }
+    }
 
     await openai.beta.threads.messages.create(
         session.sessInfo.thread.id,
