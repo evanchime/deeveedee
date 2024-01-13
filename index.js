@@ -106,7 +106,7 @@ app.use(
     resave: false, // required: force lightweight session keep alive (touch)
     saveUninitialized: false, // recommended: only save session when data exists
     secret: config.sessSecret,
-    cookie: {maxAge: 1800000}
+    cookie: {maxAge: 1800000, path: "/webhook"}, // 30 minutes
   })
 )
 
@@ -197,20 +197,24 @@ app.post("/webhook", (req, res) => {
       // Extract the message text from the webhook payload
       let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
 
-      if (!req.session.sessInfo) {
+      // if (!req.session.sessInfo) {
 
-        // Create the assistant for the first time
-        const assistant = createAssistant()
-        console.log(`this is assistant ${assistant.id}`)
-        // Create the thread for the first time
-        const thread = createThread()
-        console.log(`this is thread ${thread.id}`)
-        // Store the session
-        req.session.sessInfo = {
-          assistant : assistant,
-          thread : thread
-        }
-      }
+      //   // Create the assistant for the first time
+      //   req.session.sessInfo ={
+      //     assistant : null,
+      //     thread : null
+      //   }
+      //   createAssistant().then(assistant => {req.session.sessInfo.assistant = assistant}) 
+      //   console.log(`this is assistant ${ req.session.sessInfo.assistant.id}`)
+      //   // Create the thread for the first time
+      //   createThread().then(thread => {req.session.sessInfo.thread = thread})
+      //   console.log(`this is thread ${ req.session.sessInfo.thread.id}`)
+      //   // Store the session
+      //   // req.session.sessInfo = {
+      //   //   assistant : assistant,
+      //   //   thread : thread
+      //   // }
+      // }
         
       
       // if (!req.session.sessInfo[from]) {
@@ -233,7 +237,7 @@ app.post("/webhook", (req, res) => {
 
       // Send the message to openai for processing
       //DEBUG
-      getCompletion(/*thisSession*/req.session.sessInfo, msg_body)
+      getCompletion(/*thisSession*/req.session, msg_body)
       .then(msg => {
         console.log("Got a response from Openai bot: ", msg)
         console.log(`this is session info ${JSON.stringify(req.session.sessInfo)} `)
