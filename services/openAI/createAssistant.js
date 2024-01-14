@@ -14,7 +14,7 @@ const createAssistant = async () => {
             model: "gpt-4-1106-preview"
         })
 
-        return { assistant };
+        return assistant
     } catch (error) {
         console.error('Error:', error);
         throw error;

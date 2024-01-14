@@ -7,16 +7,9 @@ const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
 const {getCompletion,createAssistant,createThread} = require("./services/openAI/getCompletion")
 const session = require("express-session")
- const OpenAI = require('openai')
-// const {createAssistant, c = require('./services/openAI/getCompletion')
-// const createThread = require('./services/openAI/createThread')
-
-const openai = new OpenAI({
-    apiKey: config.openaiApiKey
-})
-// const MongoDBStore = require('connect-mongodb-session')(session);
 const RedisStore = require("connect-redis")(session)
 const Redis = require("ioredis")
+const app = express()
 
 // Initialize client.
 const redisClient = new Redis({
@@ -43,8 +36,6 @@ const redisClient = new Redis({
 //   .on("reconnecting", () => console.log("Redis client reconnecting"))
 //   .on("end", () => console.log("Redis client disconnected"))
 
-// const {createClient} = require("redis")
-const app = express()
 
 // // Initialize client.
 // const redisClient = createClient({
@@ -61,38 +52,6 @@ const app = express()
 // .on("end", () => console.log("Redis client disconnected"))
 // .connect()
 
-// for local testing
-// let redisClient = createClient() 
-// .on("error", console.error)
-// .on("connect", () => console.log("Redis client connected"))
-// .on("ready", () => console.log("Redis client ready"))
-// .on("reconnecting", () => console.log("Redis client reconnecting"))
-// .on("end", () => console.log("Redis client disconnected"))
-// .connect()
-
-
-// const redisClient = createClient({
-//   username: 'default', // use your Redis user. More info https://redis.io/docs/management/security/acl/
-//   password: config.redisStoreSecret, // use your password here
-//   socket: {
-//     host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
-//     port: 11258
-//     // rejectUnauthorized: false
-
-//   }
-// })
-// .on('error', (err) => console.log('Redis Client Error', err))
-// .on("connect", () => console.log("Redis client connected"))
-// .on("ready", () => console.log("Redis client ready"))
-// .on("reconnecting", () => console.log("Redis client reconnecting"))
-// .on("end", () => console.log("Redis client disconnected"))
-// .connect()
-
-
-// redisClient.on('error', (err) => console.log('Redis Client Error', err));
-
-// await redisClient.connect();
-
 
 // // Initialize store.
 let redisStore = new RedisStore({
@@ -106,7 +65,7 @@ app.use(
     resave: false, // required: force lightweight session keep alive (touch)
     saveUninitialized: false, // recommended: only save session when data exists
     secret: config.sessSecret,
-    cookie: {maxAge: 1800000, path: "/webhook"}, // 30 minutes
+    cookie: {maxAge: 1800000}, // 30 minutes
   })
 )
 
@@ -117,18 +76,6 @@ app.use(({ method, url }, rsp, next) => {
   })
   next()
 })
-
-// app.use((req, res, next) => {
-//   if (req.method === "POST" && req.path === "/webhook") {
-//     if (!req.session) {
-//       console.log("Session is not initialized")
-//       return res.status(500).end()
-//     }
-//     req.session.sessData = req.session.sessData || 1
-//     console.log(`this is sessinfo ${req.session.sessData++}`)
-//   }
-//   next()
-// })
 
 // Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}))
@@ -142,10 +89,6 @@ config.checkEnvVariables()
 //Initialise some environnpment variables
 const port = config.port
 const token = config.metaVerifyToken
-
-//Create session variable
-//DEBUG
-//const thisSession = {}
 
 // Webhook setup
 app.get('/webhook', function(req, res) {
@@ -162,105 +105,86 @@ app.get('/webhook', function(req, res) {
 
 // Message handler
 // Accepts POST requests at /webhook endpoint
-app.post("/webhook", (req, res) => {
-
-  // Log the session id
-  console.log(`this is session id ${req.session.id} `)
-  console.log(`this is session ${JSON.stringify(req.session)} `)
-
-
-
-  // console.log(` this is this session ${thisSession} `)
-  //DEBUG
-  //console.log(JSON.stringify(thisSession, null, 2))
-  
+app.post('/webhook', async (req, res) => {
   // Check the Incoming webhook message
-  console.log(JSON.stringify(req.body, null, 2))
+console.log(JSON.stringify(req.body, null, 2))
 
-
-  // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
-  if (req.body.object) {
-    if (
-      req.body.entry &&
-      req.body.entry[0].changes &&
-      req.body.entry[0].changes[0] &&
-      req.body.entry[0].changes[0].value.messages &&
-      req.body.entry[0].changes[0].value.messages[0] &&
-      !req.body.entry[0].changes[0].value.messages[0].context &&
-      !req.body.entry[0].changes[0].value.messages[0].referral
-    ) {
-      // // Return a '200 OK' response to all requests
-      // res.status(200).send("EVENT_RECEIVED") 
+// info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
+if (req.body.object) {
+  if (
+    req.body.entry &&
+    req.body.entry[0].changes &&
+    req.body.entry[0].changes[0] &&
+    req.body.entry[0].changes[0].value.messages &&
+    req.body.entry[0].changes[0].value.messages[0] &&
+    !req.body.entry[0].changes[0].value.messages[0].context &&
+    !req.body.entry[0].changes[0].value.messages[0].referral
+  ) {
 
       // Extract the sender's phone number from the webhook payload
       let from = req.body.entry[0].changes[0].value.messages[0].from
       // Extract the message text from the webhook payload
       let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body
 
-      // if (!req.session.sessInfo) {
+      // The session data
+      let sessData = {}
 
-      //   // Create the assistant for the first time
-      //   req.session.sessInfo ={
-      //     assistant : null,
-      //     thread : null
-      //   }
-      //   createAssistant().then(assistant => {req.session.sessInfo.assistant = assistant}) 
-      //   console.log(`this is assistant ${ req.session.sessInfo.assistant.id}`)
-      //   // Create the thread for the first time
-      //   createThread().then(thread => {req.session.sessInfo.thread = thread})
-      //   console.log(`this is thread ${ req.session.sessInfo.thread.id}`)
-      //   // Store the session
-      //   // req.session.sessInfo = {
-      //   //   assistant : assistant,
-      //   //   thread : thread
-      //   // }
-      // }
-        
-      
-      // if (!req.session.sessInfo[from]) {
-        
-      //   // Create the assistant for the first time
-      //   const assistant = createAssistant()
-        
-      //   // Create the thread for the first time
-      //   const thread = createThread()
+      try {
+        // Check for the from phone number object existence
+        const fromExists = await redisClient.exists(from)
 
-      //   // Store the session
-      //   req.session.sessInfo[from] = {
-      //       assistant: assistant,
-      //       thread: thread
-      //   }
-      // }
-      
-            
-        
+        if (!fromExists) {
+          // Create the openai assistant in Redis
+          sessData.assistant = await createAssistant()
+          // Create the openai thread in Redis
+          sessData.thread = await createThread()
 
-      // Send the message to openai for processing
-      //DEBUG
-      getCompletion(/*thisSession*/req.session, msg_body)
-      .then(msg => {
-        console.log("Got a response from Openai bot: ", msg)
-        console.log(`this is session info ${JSON.stringify(req.session.sessInfo)} `)
-        // Send the message to the user
-      whatsappMessage(from, msg)
-      })
-      .catch(err => {
-      console.error(
-        "Got an error from Openai bot: ",
-        err.stack || err
-      )
-      })
+          // Serialize object and set expiration time to 1 hour
+          await redisClient.set(from, JSON.stringify(sessData), 'EX', 60*60); 
+          console.log(`Object created ${sessData}`)
+
+        } else {
+          // Retrieve existing object
+          sessData = JSON.parse(await redisClient.get(from))
+        }
+
+        // Send the message to openai for processing
+        getCompletion(sessData, msg_body)
+        .then(msg => {
+          console.log("Got a response from Openai bot: ", msg)
+          // Send the message to the user
+          whatsappMessage(from, msg)
+        })
+        .catch(err => {
+          console.error(
+            "Got an error from Openai bot: ",
+            err.stack || err
+          )
+        })
+
+      }catch (error) {
+          console.error('Redis error:', error)
+          res.status(500).json({ message: 'Internal server error' })
+      }
+       // Return a '200 OK' response to all requests
+      res.status(200).send("EVENT_RECEIVED") 
+    }else {
+      // Return a '204 No content for these request' if event is not a direct WhatsApp business account API text message
+      res.sendStatus(204)
     }
-    // Return a '200 OK' response to all requests
-    res.status(200).send("EVENT_RECEIVED") 
-  } else {
-    // Return a '404 Not Found' if event is not from a WhatsApp API
-    res.sendStatus(404)
-  }
+} else {
+  // Return a '404 Not Found' if event is not from a WhatsApp API
+  res.sendStatus(404)
+}
 })
         
 app.listen(port, ()=>{
     console.log(`Server listening on port ${port}...`)
 })
+
+  
+            
+        
+
 
 
