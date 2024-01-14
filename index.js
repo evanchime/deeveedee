@@ -6,9 +6,6 @@ const config = require("./services/config")
 const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
 const {getCompletion,createAssistant,createThread} = require("./services/openAI/getCompletion")
-//DEBUG
-// const session = require("express-session")
-// const RedisStore = require("connect-redis")(session)
 const Redis = require("ioredis")
 const app = express()
 
@@ -52,23 +49,6 @@ const redisClient = new Redis({
 // .on("reconnecting", () => console.log("Redis client reconnecting"))
 // .on("end", () => console.log("Redis client disconnected"))
 // .connect()
-
-// //DEBUG
-// // // Initialize store.
-// let redisStore = new RedisStore({
-//   client: redisClient,
-// })
-
-// // Initialize sesssion storage.
-// app.use(
-//   session({
-//     store: redisStore,
-//     resave: false, // required: force lightweight session keep alive (touch)
-//     saveUninitialized: false, // recommended: only save session when data exists
-//     secret: config.sessSecret,
-//     cookie: {maxAge: 1800000}, // 30 minutes
-//   })
-// )
 
 // Log response status, request method and url
 app.use(({ method, url }, rsp, next) => {
