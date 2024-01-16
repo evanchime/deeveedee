@@ -1,5 +1,6 @@
 const OpenAI = require('openai')
 const config = require('../config')
+const context = require('./context')
 
 const openai = new OpenAI({
     apiKey: config.openaiApiKey
@@ -34,7 +35,7 @@ const createAssistant = async () => {
         // Create an assistant with the specified parameters
         const assistant = await openai.beta.assistants.create({
             name: "Helpful Assistant",
-            instructions: "You are a helpful assistant.",
+            instructions: context.orderBot,
             model: "gpt-4-1106-preview"
         })
         return assistant
