@@ -161,7 +161,10 @@ if (req.body.object) {
       let msg_body
       if (req.body.entry[0].changes[0].value.messages[0].text) {
         msg_body = req.body.entry[0].changes[0].value.messages[0].text.body  
-      }else {
+      }else if (req.body.entry[0].changes[0].value.messages[0].reaction) {
+        msg_body = req.body.entry[0].changes[0].value.messages[0].reaction.emoji
+      }
+      else {
         msg_body = "Sorry, we only support text messages for now.\uD83D\uDE0A"  
       }
 
