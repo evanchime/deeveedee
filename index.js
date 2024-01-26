@@ -158,7 +158,12 @@ if (req.body.object) {
       // Extract the sender's phone number from the webhook payload
       let from = req.body.entry[0].changes[0].value.messages[0].from
       // Extract the message text from the webhook payload
-      let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body || 'Sorry, we only support text messages for now.\uD83D\uDE0A'
+      let msg_body
+      if (req.body.entry[0].changes[0].value.messages[0].text.body) {
+        msg_body = req.body.entry[0].changes[0].value.messages[0].text.body  
+      }else {
+        msg_body = "Sorry, we only support text messages for now.\uD83D\uDE0A"  
+      }
 
       // The session data
       let sessData = {}
