@@ -8,10 +8,11 @@ const openai = new OpenAI({
 
 const getCompletion = async (sessData, text) => {
 
+    //If the user sends a message that is not text, return the default message
     if (text === "Sorry, we only support text messages for now.\uD83D\uDE0A") {
         return "Sorry, we only support text messages for now.\uD83D\uDE0A"
         
-    } else {
+    } else {//Otherwise, send the message to OpenAI for processing
         await openai.beta.threads.messages.create(
             sessData.thread.id,
             { role: "user", content: text }
