@@ -7,27 +7,32 @@ const openai = new OpenAI({
 })
 
 const getCompletion = async (sessData, text) => {
-    
-    await openai.beta.threads.messages.create(
-        sessData.thread.id,
-        { role: "user", content: text }
-    )
 
-    let run = await openai.beta.threads.runs.create(
-        sessData.thread.id,
-        { assistant_id: sessData.assistant.id }
-    )
-
-    while (run.status !== "completed") {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
-        run = await openai.beta.threads.runs.retrieve(sessData.thread.id, run.id)
-    }
-    
+    if (text === "Sorry, we only support text messages for now.\uD83D\uDE0A") {
+        return "Sorry, we only support text messages for now.\uD83D\uDE0A"
         
-    const messages = await openai.beta.threads.messages.list(sessData.thread.id)
-    const assistantResponse = messages.data.find(msg => msg.role === "assistant")
-
-    return assistantResponse.content[0].text.value
+    } else {
+        await openai.beta.threads.messages.create(
+            sessData.thread.id,
+            { role: "user", content: text }
+        )
+    
+        let run = await openai.beta.threads.runs.create(
+            sessData.thread.id,
+            { assistant_id: sessData.assistant.id }
+        )
+    
+        while (run.status !== "completed") {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+            run = await openai.beta.threads.runs.retrieve(sessData.thread.id, run.id)
+        }
+        
+            
+        const messages = await openai.beta.threads.messages.list(sessData.thread.id)
+        const assistantResponse = messages.data.find(msg => msg.role === "assistant")
+    
+        return assistantResponse.content[0].text.value
+    }
 }
 
 const createAssistant = async () => {
