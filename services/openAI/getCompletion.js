@@ -42,7 +42,7 @@ const createAssistant = async () => {
         const assistant = await openai.beta.assistants.create({
             name: "Helpful Assistant",
             instructions: context.orderBot,
-            model: "gpt-4-1106-preview"
+            model: "gpt-4-turbo-preview"
         })
         return assistant
     } catch (error) {
