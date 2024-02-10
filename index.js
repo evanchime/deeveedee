@@ -118,7 +118,7 @@ if (req.body.object) {
           sessData.thread = await createThread()
 
           // Serialize object and set expiration time to 1 hour
-          await redisClient.set(from, JSON.stringify(sessData), 'EX', 60*60); 
+          await redisClient.set(from, JSON.stringify(sessData), 'EX', 60*30); 
           console.log(`Object created ${sessData}`)
 
         } else {
