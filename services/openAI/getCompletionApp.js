@@ -30,7 +30,7 @@ const model = new ChatOpenAI({
 const MEMORY_KEY = "chat_history";
 
 // Create a memory prompt template with system, user, and agent messages
-const memoryPrompt = ChatPromptTemplate.fromMessages([
+const prompt = ChatPromptTemplate.fromMessages([
   ["system", context.orderBot],
   new MessagesPlaceholder(MEMORY_KEY),
   ["user", "{input}"],
@@ -38,12 +38,7 @@ const memoryPrompt = ChatPromptTemplate.fromMessages([
 ]);
 
 // Set the input variables for the memory prompt
-memoryPrompt.inputVariables = ["chat_history", "input", "agent_scratchpad"];
-
-if (memoryPrompt.inputVariables.includes("agent_scratchpad")) {
-  console.log("Prompt has an input variable named 'agent_scratchpad'");
-  
-}
+prompt.inputVariables = ["chat_history", "input", "agent_scratchpad"];
 
 // Create an empty array to store tools
 const tools = [];
@@ -92,7 +87,7 @@ const createAgentExecutor = async () => {
     const agent = await createOpenAIFunctionsAgent({
       modelWithFunctions,
       tools,
-      memoryPrompt,
+      prompt,
     });
     // Create a new instance of AgentExecutor with the agent, tools, and memory
     const agentExecutor = new AgentExecutor({
@@ -141,7 +136,7 @@ module.exports = { createAgentExecutor, getCompletionApp };
 //     input: (i) => i.input,
 //     agent_scratchpad: (i) => formatToOpenAIFunctionMessages(i.steps),
 //   },
-//   memoryPrompt,
+//   prompt,
 //   modelWithFunctions,
 //   new OpenAIFunctionsAgentOutputParser(),
 // ]);
