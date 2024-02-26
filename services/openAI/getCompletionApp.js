@@ -21,9 +21,10 @@ const {z} = require("zod");
 // });
 
 // Create a new instance of ChatOpenAI with the model name "gpt-4-turbo-preview" and temperature set to 0
-const model = new ChatOpenAI({
+const llm = new ChatOpenAI({
   modelName: "gpt-4-turbo-preview",
   temperature: 0,
+  functions: [orderDetailsOpenAIFunction],
 });
 
 // Define the memory key for chat history
@@ -65,10 +66,10 @@ const orderTool = new DynamicStructuredTool({
 tools.push(orderTool);
 
 // Bind the model with the defined functions, including the orderTool and orderDetailsOpenAIFunction
-const modelWithFunctions = model.bind({
-  functions: [orderDetailsOpenAIFunction]
-  // functions: [convertToOpenAIFunction(orderTool), orderDetailsOpenAIFunction],
-})
+// const llm = llm.bind({
+//   functions: [orderDetailsOpenAIFunction]
+//   // functions: [convertToOpenAIFunction(orderTool), orderDetailsOpenAIFunction],
+// })
 
 /**
  * BufferMemory instance for storing chat history.
