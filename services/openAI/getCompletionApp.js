@@ -86,7 +86,7 @@ const createAgentExecutor = async () => {
   try {
     
     const agent = await createOpenAIFunctionsAgent({
-      modelWithFunctions,
+      llm,
       tools,
       prompt,
     });
