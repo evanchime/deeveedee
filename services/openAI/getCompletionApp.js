@@ -37,6 +37,9 @@ const memoryPrompt = ChatPromptTemplate.fromMessages([
   new MessagesPlaceholder("agent_scratchpad"),
 ]);
 
+// Set the input variables for the memory prompt
+memoryPrompt.inputVariables = ["chat_history", "input", "agent_scratchpad"];
+
 // Create an empty array to store tools
 const tools = [];
 
