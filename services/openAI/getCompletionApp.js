@@ -40,10 +40,15 @@ const memoryPrompt = ChatPromptTemplate.fromMessages([
 // Set the input variables for the memory prompt
 memoryPrompt.inputVariables = ["chat_history", "input", "agent_scratchpad"];
 
+if (memoryPrompt.inputVariables.includes("agent_scratchpad")) {
+  console.log("Prompt has an input variable named 'agent_scratchpad'");
+  
+}
+
 // Create an empty array to store tools
 const tools = [];
 
-// Create a new DynamicStructuredTool instance named "orderTool" to retrieve order details
+// Create a new DynamicStructuredTool instance named "orderTool"  to retrieve order details
 const orderTool = new DynamicStructuredTool({
   name: "getOrderDetails",
   description: "Returns the order details.",
