@@ -1,14 +1,14 @@
 const config = require('../config');
 const context = require('./context'); 
 const { ChatOpenAI } = require("@langchain/openai");
-const { orderDetailsOpenAIFunction, orderDetailsSchema } = require("./schemas");
+const { orderDetailsOpenAIFunction, tools } = require("./schemas");
 const { BufferMemory } = require("langchain/memory");
 const { ChatPromptTemplate, MessagesPlaceholder } = require("@langchain/core/prompts");
-const { DynamicStructuredTool } = require("@langchain/core/tools");
-const { convertToOpenAIFunction } = require("@langchain/core/utils/function_calling");
+// const { DynamicStructuredTool } = require("@langchain/core/tools");
+// const { convertToOpenAIFunction } = require("@langchain/core/utils/function_calling");
 const { AgentExecutor, createOpenAIFunctionsAgent, AgentStep } = require("langchain/agents");
-const {zodToJsonSchema} = require("zod-to-json-schema");
-const {z} = require("zod");
+// const {zodToJsonSchema} = require("zod-to-json-schema");
+// const {z} = require("zod");
 // const { RunnableSequence } = require("@langchain/core/runnables");
 // const { formatToOpenAIFunctionMessages } = require("langchain/agents/format_scratchpad");
 // const { OpenAIFunctionsAgentOutputParser } = require("langchain/agents/openai/output_parser");
@@ -40,30 +40,6 @@ const prompt = ChatPromptTemplate.fromMessages([
 
 // Set the input variables for the memory prompt
 prompt.inputVariables = ["chat_history", "input", "agent_scratchpad"];
-
-// Create an empty array to store tools
-const tools = [];
-
-// Create a new DynamicStructuredTool instance named "orderTool"  to retrieve order details
-const orderTool = new DynamicStructuredTool({
-  name: "getOrderDetails",
-  description: "Returns the order details.",
-  schema: orderDetailsSchema,
-  func: async (input) => {
-    return {
-      reference_id: input.reference_id,
-      total_amount: input.total_amount,
-      items: input.items,
-      subtotal: input.subtotal,
-      tax: input.tax,
-      shipping: input.shipping,
-      discount: input.discount
-    }
-  }
-})
-
-// Add the orderTool to the tools array
-tools.push(orderTool);
 
 // Bind the model with the defined functions, including the orderTool and orderDetailsOpenAIFunction
 // const llm = llm.bind({
