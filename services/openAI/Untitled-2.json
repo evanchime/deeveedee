@@ -1,0 +1,102 @@
+
+
+{
+  "messaging_product": "whatsapp",
+  "recipient_type": "individual",
+  "to": "PHONE_NUMBER",
+  "type": "interactive",
+  "interactive": {
+    "type": "order_details",
+    "header": {
+      "type": "image",
+      "image": {
+        "link": "http(s)://the-url",
+        "provider": {
+          "name": "provider-name"
+        }
+      }
+    },
+    "body": {
+      "text": "your-text-body-content"
+    },
+    "footer": {
+      "text": "your-text-footer-content"
+    },
+    "action": {
+      "name": "review_and_pay",
+      "parameters": {
+        "reference_id": "reference-id-value",
+        "type": "digital-goods",
+        "payment_settings": [
+          {
+            "type": "payment_gateway",
+            "payment_gateway": {
+              "type": "razorpay",
+              "configuration_name": "payment-config-id",
+      	      "razorpay": {
+                "receipt": "receipt-value",
+                "notes": {
+                  "key1": "value1"
+                }
+              }
+            }
+          }
+        ],
+        "currency": "INR",
+        "total_amount": {
+          "value": 21000,
+          "offset": 100
+        },
+        "order": {
+          "status": "pending",
+          "catalog_id": "the-catalog_id",
+          "expiration": {
+            "timestamp": "utc_timestamp_in_seconds",
+            "description": "cancellation-explanation"
+          },
+          "items": [
+            {
+              "retailer_id": "1234567",
+              "name": "Product name, for example bread",
+              "amount": {
+                "value": 10000,
+                "offset": 100
+              },
+              "quantity": 1,
+              "sale_amount": {
+                "value": 100,
+                "offset": 100
+              }
+            }
+          ],
+          "subtotal": {
+            "value": 20000,
+            "offset": 100
+          },
+          "tax": {
+            "value": 1000,
+            "offset": 100,
+            "description": "optional_text"
+          },
+          "shipping": {
+            "value": 1000,
+            "offset": 100,
+            "description": "optional_text"
+          },
+          "discount": {
+            "value": 1000,
+            "offset": 100,
+            "description": "optional_text",
+            "discount_program_name": "optional_text"
+          }
+        }
+      }
+    }
+  }
+}
+
+  
+
+
+
+

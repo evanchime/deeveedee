@@ -67,10 +67,11 @@ const createAgentExecutor = async () => {
       prompt,
     });
     // Create a new instance of AgentExecutor with the agent, tools, and memory
-    const agentExecutor = new AgentExecutor({
+    const agentExecutor = AgentExecutor.fromAgentAndTools({
       agent,
       tools,
-      memory
+      memory,
+      returnIntermediateSteps: true,
     });
     return agentExecutor;
 
@@ -81,18 +82,18 @@ const createAgentExecutor = async () => {
 };
     
 
-// Function to get completion from the agentExecutor
-const getCompletionApp = async (sessData, text) => {
-  try {
-    return await sessData.agentExecutor.invoke({ input: text });
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
-}
+// // Function to get completion from the agentExecutor
+// const getCompletionApp = async (sessData, text) => {
+//   try {
+//     return await sessData.agentExecutor.invoke({ input: text });
+//   } catch (error) {
+//     console.error('Error:', error);
+//     throw error;
+//   }
+// }
     
 
-module.exports = { createAgentExecutor, getCompletionApp };
+module.exports = { createAgentExecutor};
 
 
 

@@ -6,7 +6,8 @@ const config = require("./services/config")
 const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
 //const {getCompletion,createAssistant,createThread} = require("./services/openAI/getCompletion")
-const {getCompletionApp, createAgentExecutor} = require("./services/openAI/getCompletionApp")
+const {createAgentExecutor} = require("./services/openAI/createAgent")
+const {getCompletionTest} = require("./services/openAI/getCompletionTest")
 const Redis = require("ioredis")
 const app = express()
 
@@ -126,7 +127,7 @@ if (req.body.object) {
         }
 
         // Send the message to openai for processing
-        getCompletionApp(sessData, msg_body)
+        getCompletionTest(sessData, msg_body)
         .then(msg => {
           console.log("Got a response from Openai bot: ", msg)
           if ((JSON.parse(msg)).reference_id) {
