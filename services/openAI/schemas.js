@@ -75,7 +75,7 @@ const orderDetailsSchema = z.object({
 const orderDetailsOpenAIFunction = {
   name: "orderDetails",
   description: "Return the order details for the order.",
-  parameters: zodToJsonSchema(orderDetailsSchema),
+  parameters: zodToJsonSchema(orderDetailsSchema, "orderDetailsSchema"),
 }
 
 module.exports = {
