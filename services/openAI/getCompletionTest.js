@@ -1,5 +1,5 @@
 // Function to get completion from the agentExecutor
-const getCompletionApp = async (sessData, text) => {
+const getCompletionTest = async (sessData, text) => {
   try {
     return await sessData.agentExecutor.invoke({ input: text });
   } catch (error) {
@@ -9,5 +9,5 @@ const getCompletionApp = async (sessData, text) => {
 }
 
 module.exports = {
-  getCompletionApp,
+  getCompletionTest,
 };

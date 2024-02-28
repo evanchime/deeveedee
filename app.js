@@ -126,8 +126,10 @@ if (req.body.object) {
           sessData = JSON.parse(await redisClient.get(from))
         }
 
+        
+        await sessData.agentExecutor.invoke({ input: msg_body })
         // Send the message to openai for processing
-        getCompletionTest(sessData, msg_body)
+        //getCompletionTest(sessData, msg_body)
         .then(msg => {
           console.log("Got a response from Openai bot: ", msg)
           if ((JSON.parse(msg)).reference_id) {
