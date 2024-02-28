@@ -51,7 +51,12 @@ prompt.inputVariables = ["chat_history", "input", "agent_scratchpad"];
  * BufferMemory instance for storing chat history.
  * @type {BufferMemory}
 */
-const memory = new BufferMemory({ returnMessages:true, memoryKey: "chat_history" });
+const memory = new BufferMemory({ 
+  returnMessages:true, 
+  memoryKey: "chat_history", 
+  inputKey: "input", 
+  outputKey: "output"
+});
 
 /**
  * Creates an AgentExecutor instance.
@@ -68,9 +73,9 @@ const createAgentExecutor = async () => {
     });
     // Create a new instance of AgentExecutor with the agent, tools, and memory
     const agentExecutor = AgentExecutor.fromAgentAndTools({
-      agent,
-      tools,
-      memory,
+      agent: agent,
+      tools: tools,
+      memory: memory,
       returnIntermediateSteps: true,
     });
     return agentExecutor;

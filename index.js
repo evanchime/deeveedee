@@ -124,6 +124,7 @@ if (req.body.object) {
         } else {
           // Retrieve existing object
           sessData = JSON.parse(await redisClient.get(from))
+          console.log(`Object retrieved ${sessData}`)
         }
 
         // Send the message to openai for processing

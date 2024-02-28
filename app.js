@@ -6,6 +6,7 @@ const config = require("./services/config")
 const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
 //const {getCompletion,createAssistant,createThread} = require("./services/openAI/getCompletion")
+const { AgentExecutor, createOpenAIFunctionsAgent, AgentStep } = require("langchain/agents");
 const {createAgentExecutor} = require("./services/openAI/createAgent")
 const {getCompletionTest} = require("./services/openAI/getCompletionTest")
 const Redis = require("ioredis")
@@ -119,22 +120,24 @@ if (req.body.object) {
 
           // Serialize object and set expiration time to 1/2 hour
           await redisClient.set(from, JSON.stringify(sessData), 'EX', 60*30); 
-          console.log(`Object created ${sessData}`)
+          console.log(`Object created ${sessData.agentExecutor}`)
 
         } else {
           // Retrieve existing object
           sessData = JSON.parse(await redisClient.get(from))
+          console.log(`Object retrieved ${sessData.agentExecutor}`)
         }
 
         
-        await sessData.agentExecutor.invoke({ input: msg_body })
+        await sessData.agentExecutor.invoke({ input: msg_body, outputKey: "output"})
         // Send the message to openai for processing
         //getCompletionTest(sessData, msg_body)
         .then(msg => {
           console.log("Got a response from Openai bot: ", msg)
-          if ((JSON.parse(msg)).reference_id) {
-            msg = "it works!"
-          }
+          // if ((JSON.parse(msg)).reference_id) {
+          //   msg = "it works!"
+          // }
+          JSON.parse(JSON.stringify(msg)).reference_id ? msg = "it works!" : console.log("not seen yet")
           // Send the message to the user
           whatsappMessage(from, msg)
         })
