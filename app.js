@@ -7,7 +7,11 @@ const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
 //const {getCompletion,createAssistant,createThread} = require("./services/openAI/getCompletion")
 const { AgentExecutor, createOpenAIFunctionsAgent, AgentStep } = require("langchain/agents");
-const {createAgentExecutor} = require("./services/openAI/createAgent")
+const { createConversationBufferMemory } = require("./services/openAI/createConversationBufferMemory");
+const { tools } = require("./services/openAI/schemas");
+const prompt = require("./services/openAI/prompt");
+const llm = require("./services/openAI/llm");
+const {createAgentExecutor} = require("./services/openAI/createAgentExecutor")
 const {getCompletionTest} = require("./services/openAI/getCompletionTest")
 const Redis = require("ioredis")
 const app = express()
@@ -107,29 +111,33 @@ if (req.body.object) {
         msg_body = "Sorry, we only support text messages for now.\uD83D\uDE0A"  
       }
 
-      // The session data
-      let sessData = {}
+      // // The session data
+      // let sessData = {}
 
       try {
-        // Check for the from phone number object existence
-        const fromExists = await redisClient.exists(from)
+      //   // Check for the from phone number object existence
+      //   const fromExists = await redisClient.exists(from)
 
-        if (!fromExists) {
-          // Create the agent executor in Redis
-          sessData.agentExecutor = await createAgentExecutor()
+      //   if (!fromExists) {
+      //     // Create the agent executor in Redis
+      //     sessData.agentExecutor = await createAgentExecutor()
 
-          // Serialize object and set expiration time to 1/2 hour
-          await redisClient.set(from, JSON.stringify(sessData), 'EX', 60*30); 
-          console.log(`Object created ${sessData.agentExecutor}`)
+      //     // Serialize object and set expiration time to 1/2 hour
+      //     await redisClient.set(from, JSON.stringify(sessData), 'EX', 60*30); 
+      //     console.log(`Object created ${sessData.agentExecutor}`)
 
-        } else {
-          // Retrieve existing object
-          sessData = JSON.parse(await redisClient.get(from))
-          console.log(`Object retrieved ${sessData.agentExecutor}`)
-        }
+      //   } else {
+      //     // Retrieve existing object
+      //     sessData = JSON.parse(await redisClient.get(from))
+      //     console.log(`Object retrieved ${sessData.agentExecutor}`)
+      //   }
+
+        const memory = await createConversationBufferMemory(redisClient, from)
+
+        const agentExecutor = await createAgentExecutor(llm, tools, prompt, memory)
 
         
-        await sessData.agentExecutor.invoke({ input: msg_body, outputKey: "output"})
+        await agentExecutor.invoke({ input: msg_body, outputKey: "output"})
         // Send the message to openai for processing
         //getCompletionTest(sessData, msg_body)
         .then(msg => {
