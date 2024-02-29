@@ -135,6 +135,7 @@ if (req.body.object) {
         const memory = await createConversationBufferMemory(redisClient, from)
 
         const agentExecutor = await createAgentExecutor(llm, tools, prompt, memory)
+        console.log("Agent executor created: ", agentExecutor)
 
         
         await agentExecutor.invoke({ input: msg_body, outputKey: "output"})
