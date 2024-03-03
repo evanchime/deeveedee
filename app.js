@@ -15,30 +15,30 @@ const { HumanMessage, AIMessage } = require("@langchain/core/messages")
 const Redis = require("ioredis")
 const app = express()
 
-// //Initialize client.
-// const redisClient = new Redis({
-//   host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
-//   port: 11258,
-//   password: config.redisStoreSecret,
-//   // tls: {
-//   //   rejectUnauthorized: false
-//   // }
-// })
-//   .on("error", console.error)
-//   .on("connect", () => console.log("Redis client connected"))
-//   .on("ready", () => console.log("Redis client ready"))
-//   .on("reconnecting", () => console.log("Redis client reconnecting"))
-//   .on("end", () => console.log("Redis client disconnected"))
-
-  
-
-// Initialize client.
-const redisClient = new Redis()
+//Initialize client.
+const redisClient = new Redis({
+  host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
+  port: 11258,
+  password: config.redisStoreSecret,
+  // tls: {
+  //   rejectUnauthorized: false
+  // }
+})
   .on("error", console.error)
   .on("connect", () => console.log("Redis client connected"))
   .on("ready", () => console.log("Redis client ready"))
   .on("reconnecting", () => console.log("Redis client reconnecting"))
   .on("end", () => console.log("Redis client disconnected"))
+
+  
+
+// Initialize client.
+// const redisClient = new Redis()
+//   .on("error", console.error)
+//   .on("connect", () => console.log("Redis client connected"))
+//   .on("ready", () => console.log("Redis client ready"))
+//   .on("reconnecting", () => console.log("Redis client reconnecting"))
+//   .on("end", () => console.log("Redis client disconnected"))
 
 
 // // Initialize client.
