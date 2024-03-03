@@ -5,41 +5,40 @@ const bodyParser = require("body-parser")
 const config = require("./services/config")
 const whatsappMessage = require("./services/whatsappMessage")
 const verifyRequestSignature = require("./services/verifyRequestSignature")
-//const {getCompletion,createAssistant,createThread} = require("./services/openAI/getCompletion")
-const { AgentExecutor, createOpenAIFunctionsAgent, AgentStep } = require("langchain/agents");
-const { createConversationBufferMemory } = require("./services/openAI/createConversationBufferMemory");
 const { tools } = require("./services/openAI/schemas");
 const prompt = require("./services/openAI/prompt");
 const llm = require("./services/openAI/llm");
 const {createAgentExecutor} = require("./services/openAI/createAgentExecutor")
-const {getCompletionTest} = require("./services/openAI/getCompletionTest")
+const { createMemory } = require("./services/openAI/createMemory")
+const { getMessages, addMessage } = require("./services/openAI/messages")
+const { HumanMessage, AIMessage } = require("@langchain/core/messages")
 const Redis = require("ioredis")
 const app = express()
 
-//Initialize client.
-const redisClient = new Redis({
-  host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
-  port: 11258,
-  password: config.redisStoreSecret,
-  // tls: {
-  //   rejectUnauthorized: false
-  // }
-})
-  .on("error", console.error)
-  .on("connect", () => console.log("Redis client connected"))
-  .on("ready", () => console.log("Redis client ready"))
-  .on("reconnecting", () => console.log("Redis client reconnecting"))
-  .on("end", () => console.log("Redis client disconnected"))
-
-  
-
-// Initialize client.
-// const redisClient = new Redis()
+// //Initialize client.
+// const redisClient = new Redis({
+//   host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
+//   port: 11258,
+//   password: config.redisStoreSecret,
+//   // tls: {
+//   //   rejectUnauthorized: false
+//   // }
+// })
 //   .on("error", console.error)
 //   .on("connect", () => console.log("Redis client connected"))
 //   .on("ready", () => console.log("Redis client ready"))
 //   .on("reconnecting", () => console.log("Redis client reconnecting"))
 //   .on("end", () => console.log("Redis client disconnected"))
+
+  
+
+// Initialize client.
+const redisClient = new Redis()
+  .on("error", console.error)
+  .on("connect", () => console.log("Redis client connected"))
+  .on("ready", () => console.log("Redis client ready"))
+  .on("reconnecting", () => console.log("Redis client reconnecting"))
+  .on("end", () => console.log("Redis client disconnected"))
 
 
 // // Initialize client.
@@ -111,42 +110,28 @@ if (req.body.object) {
         msg_body = "Sorry, we only support text messages for now.\uD83D\uDE0A"  
       }
 
-      // // The session data
-      // let sessData = {}
+      // The chat history
+      let chatHistory = []
+      let sessionTTL = 1500
 
       try {
-      //   // Check for the from phone number object existence
-      //   const fromExists = await redisClient.exists(from)
+         chatHistory = await getMessages(redisClient, from)
 
-      //   if (!fromExists) {
-      //     // Create the agent executor in Redis
-      //     sessData.agentExecutor = await createAgentExecutor()
-
-      //     // Serialize object and set expiration time to 1/2 hour
-      //     await redisClient.set(from, JSON.stringify(sessData), 'EX', 60*30); 
-      //     console.log(`Object created ${sessData.agentExecutor}`)
-
-      //   } else {
-      //     // Retrieve existing object
-      //     sessData = JSON.parse(await redisClient.get(from))
-      //     console.log(`Object retrieved ${sessData.agentExecutor}`)
-      //   }
-
-        const memory = await createConversationBufferMemory(redisClient, from)
+        const memory = await createMemory(from, redisClient, sessionTTL, chatHistory)
 
         const agentExecutor = await createAgentExecutor(llm, tools, prompt, memory)
         console.log("Agent executor created: ", agentExecutor)
 
         
-        await agentExecutor.invoke({ input: msg_body, outputKey: "output"})
+        agentExecutor.invoke({ input: msg_body})
         // Send the message to openai for processing
-        //getCompletionTest(sessData, msg_body)
         .then(msg => {
+          msg = msg.output
           console.log("Got a response from Openai bot: ", msg)
-          // if ((JSON.parse(msg)).reference_id) {
-          //   msg = "it works!"
-          // }
-          JSON.parse(JSON.stringify(msg)).reference_id ? msg = "it works!" : console.log("not seen yet")
+          JSON.parse(JSON.stringify(msg)).reference_id ? (console.log("it works!")) : console.log("not seen yet")
+          // Add the messages to the chat history
+          addMessage(new HumanMessage(msg_body), redisClient, from, sessionTTL)
+          addMessage(new AIMessage(msg), redisClient, from, sessionTTL)
           // Send the message to the user
           whatsappMessage(from, msg)
         })

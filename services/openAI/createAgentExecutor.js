@@ -7,15 +7,13 @@ const { AgentExecutor, createOpenAIFunctionsAgent, AgentStep } = require("langch
 const createAgentExecutor = async (llm, tools, prompt, memory) => {
   // Create an agent using the createOpenAIFunctionsAgent function
   try {
-    
-    const agent = await createOpenAIFunctionsAgent({
-      llm,
-      tools,
-      prompt,
-    });
-    // Create a new instance of AgentExecutor with the agent, tools, and memory
+     // Create a new instance of AgentExecutor with the agent, tools, and memory
     const agentExecutor = AgentExecutor.fromAgentAndTools({
-      agent: agent,
+      agent: await createOpenAIFunctionsAgent({
+        llm,
+        tools,
+        prompt,
+      }),
       tools: tools,
       memory: memory,
       returnIntermediateSteps: true,
