@@ -89,21 +89,21 @@ const { DynamicStructuredTool } = require("@langchain/core/tools");
 //   schema: orderDetailsSchema,
 //   func: async ({
 //         reference_id,
-//         total_amount,
-//         items,
-//         subtotal,
-//         tax,
-//         shipping,
-//         discount
+//         total_amount: { offset, value },
+//         items: [],
+//         subtotal: { offset: subtotalOffset, value: subtotalValue },
+//         tax: { offset: taxOffset, value: taxValue, description: taxDescription },
+//         shipping: { offset: shippingOffset, value: shippingValue, description: shippingDescription },
+//         discount: { offset: discountOffset, value: discountValue, description: discountDescription, discount_program_name }
 //     }) => {
 //     return {
 //       reference_id: reference_id,
-//       total_amount: total_amount,
-//       items: items,
-//       subtotal: subtotal,
-//       tax: tax,
-//       shipping: shipping,
-//       discount: discount
+//       total_amount: { offset: offset, value: value },
+//       items: [],
+//       subtotal: { offset: subtotalOffset, value: subtotalValue },
+//       tax: { offset: taxOffset, value: taxValue, description: taxDescription },
+//       shipping: { offset: shippingOffset, value: shippingValue, description: shippingDescription },
+//       discount: { offset: discountOffset, value: discountValue, description: discountDescription, discount_program_name }
 //     }
 //   }
 // })
