@@ -87,18 +87,28 @@ const orderTool = new DynamicStructuredTool({
   name: "getOrderDetails",
   description: "Returns the order details.",
   schema: orderDetailsSchema,
-  func: async (input) => {
+  func: async (
+    {
+        reference_id,
+        total_amount,
+        items,
+        subtotal,
+        tax,
+        shipping,
+        discount
+    }) => {
     return {
-      reference_id: input.reference_id,
-      total_amount: input.total_amount,
-      items: input.items,
-      subtotal: input.subtotal,
-      tax: input.tax,
-      shipping: input.shipping,
-      discount: input.discount
+      reference_id: reference_id,
+      total_amount: total_amount,
+      items: items,
+      subtotal: subtotal,
+      tax: tax,
+      shipping: shipping,
+      discount: discount
     }
   }
 })
+
 
 // Add the orderTool to the tools array
 tools.push(orderTool);
