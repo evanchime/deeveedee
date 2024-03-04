@@ -113,6 +113,12 @@ const orderDetailsSchema = z.object({
     high: z.number().describe("The upper bound of the generated number"),
   })
 
+  const orderDetailsOpenAIFunction = {
+      name: "randomNumberGenerator",
+      description: "generate a random number between two input numbers",
+      parameters: zodToJsonSchema(orderDetailsSchema, "orderDetailsSchema"),
+    }
+
 
 
 const orderTool = new DynamicStructuredTool({
