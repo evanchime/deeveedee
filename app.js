@@ -120,8 +120,6 @@ if (req.body.object) {
         const memory = await createMemory(from, redisClient, sessionTTL, chatHistory)
 
         const agentExecutor = await createAgentExecutor(llm, tools, prompt, memory)
-        console.log("Agent executor created: ", agentExecutor)
-
         
         agentExecutor.invoke({ input: msg_body})
         // Send the message to openai for processing
