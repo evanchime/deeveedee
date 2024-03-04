@@ -87,8 +87,7 @@ const orderTool = new DynamicStructuredTool({
   name: "getOrderDetails",
   description: "Returns the order details.",
   schema: orderDetailsSchema,
-  func: async (
-    {
+  func: async ({
         reference_id,
         total_amount,
         items,
