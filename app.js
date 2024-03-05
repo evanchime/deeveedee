@@ -112,7 +112,7 @@ if (req.body.object) {
 
       // The chat history
       let chatHistory = []
-      let sessionTTL = 600
+      let sessionTTL = 300
 
       try {
          chatHistory = await getMessages(redisClient, from)
