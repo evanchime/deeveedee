@@ -108,15 +108,15 @@ const { DynamicStructuredTool } = require("@langchain/core/tools");
 //   }
 // })
 
-const orderDetailsSchema = z.object({
+const randomNumberGeneratorSchema = z.object({
     low: z.number().describe("The lower bound of the generated number"),
     high: z.number().describe("The upper bound of the generated number"),
   })
 
-  const orderDetailsOpenAIFunction = {
+  const randomNumberGeneratorOpenAIFunction = {
       name: "randomNumberGenerator",
       description: "generate a random number between two input numbers",
-      parameters: zodToJsonSchema(orderDetailsSchema, "orderDetailsSchema"),
+      parameters: zodToJsonSchema(randomNumberGeneratorSchema, "randomNumberGeneratorSchema"),
     }
 
 
@@ -124,7 +124,7 @@ const orderDetailsSchema = z.object({
 const orderTool = new DynamicStructuredTool({
     name: "random-number-generator",
     description: "generates a random number between two input numbers",
-    schema: orderDetailsSchema,
+    schema: randomNumberGeneratorSchema,
     func: async ({ low, high }) =>
       (Math.random() * (high - low) + low).toString(), // Outputs still must be strings
   })
@@ -134,9 +134,11 @@ const tools = [];
 // Add the orderTool to the tools array
 tools.push(orderTool);
 
-module.exports = {
-    orderDetailsSchema, orderDetailsOpenAIFunction, tools, orderTool
-};
+// module.exports = {
+//     orderDetailsSchema, orderDetailsOpenAIFunction, tools, orderTool
+// };
+
+module.exports = {  randomNumberGeneratorSchema, randomNumberGeneratorOpenAIFunction, tools, orderTool }
 
 
 
