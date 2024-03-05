@@ -90,7 +90,7 @@ const orderTool = new DynamicStructuredTool({
   func: async ({
         reference_id,
         total_amount: { offset, value },
-        items: [],
+        items: items,
         subtotal: { offset: subtotalOffset, value: subtotalValue },
         tax: { offset: taxOffset, value: taxValue, description: taxDescription },
         shipping: { offset: shippingOffset, value: shippingValue, description: shippingDescription },
@@ -99,7 +99,7 @@ const orderTool = new DynamicStructuredTool({
     return {
       reference_id: reference_id,
       total_amount: { offset: offset, value: value },
-      items: [],
+      items: items,
       subtotal: { offset: subtotalOffset, value: subtotalValue },
       tax: { offset: taxOffset, value: taxValue, description: taxDescription },
       shipping: { offset: shippingOffset, value: shippingValue, description: shippingDescription },
