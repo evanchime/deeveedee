@@ -5,7 +5,7 @@ const { orderDetailsOpenAIFunction } = require("./schemas");
 const llm = new ChatOpenAI({
     modelName: "gpt-4-turbo-preview",
     temperature: 0,
-    functions: [orderDetailsOpenAIFunction],
+    //functions: [orderDetailsOpenAIFunction],
 });
 
 module.exports = llm;
