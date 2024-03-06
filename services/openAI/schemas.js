@@ -88,7 +88,7 @@ const orderTool = new DynamicStructuredTool({
   description: "Returns the order details.",
   schema: orderDetailsSchema,
   func: async ({
-        //reference_id,
+        reference_id,
         total_amount: { offset, value },
         items: items,
         subtotal: { offset: subtotalOffset, value: subtotalValue },
@@ -97,7 +97,7 @@ const orderTool = new DynamicStructuredTool({
         discount: { offset: discountOffset, value: discountValue, description: discountDescription, discount_program_name }
     }) => {
     return {
-      //reference_id: reference_id,
+      reference_id: reference_id,
       total_amount: { offset: offset, value: value },
       items: items,
       subtotal: { offset: subtotalOffset, value: subtotalValue },
