@@ -13,7 +13,17 @@ const { createMemory } = require("./services/openAI/createMemory")
 const { getMessages, addMessage } = require("./services/openAI/messages")
 const { HumanMessage, AIMessage } = require("@langchain/core/messages")
 const Redis = require("ioredis")
+const { v4: uuidv4 } = require("uuid");
+const { Client } = require("langsmith");
+const uniqueId = uuidv4().slice(0, 8);
 const app = express()
+
+const client = new Client();
+
+process.env.LANGCHAIN_TRACING_V2 = "true";
+process.env.LANGCHAIN_PROJECT = `deeveedee - ${uniqueId}`;
+process.env.LANGCHAIN_ENDPOINT = "https://api.smith.langchain.com";
+process.env.LANGCHAIN_API_KEY = config.langsmithApiKey; // Replace with your API key
 
 //Initialize client.
 const redisClient = new Redis({

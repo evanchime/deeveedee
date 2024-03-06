@@ -15,7 +15,8 @@ const ENV_VARS = [
   "META_VERIFY_TOKEN",
   "WHATSAPP_PHONE_NUMBER_ID",
   "SESSION_SECRET",
-  "REDIS_STORE_SECRET"
+  "REDIS_STORE_SECRET",
+  "LANGSMITH_API_KEY",
 ];
 
 module.exports = {
@@ -31,6 +32,7 @@ module.exports = {
   whatsappPhoneNumberID: process.env.WHATSAPP_PHONE_NUMBER_ID,
   sessSecret: process.env.SESSION_SECRET,
   redisStoreSecret: process.env.REDIS_STORE_SECRET,
+  langsmithApiKey: process.env.LANGSMITH_API_KEY,
 
   // Preferred port (default to 3000)
   port: process.env.PORT || 3000,

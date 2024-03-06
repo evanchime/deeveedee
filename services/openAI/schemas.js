@@ -48,7 +48,7 @@ const orderDetailsSchema = z.object({
         description: z.string().optional().describe(
             "The description of the tax. It cannot exceed 60 characters."
         ),
-    }).describe("The tax details for the order"),
+    }).optional().describe("The tax details for the order"),
     shipping: z.object({
         offset: z.number().describe("Must be 100"),
         value: z.number().positive().int().describe(
@@ -57,7 +57,7 @@ const orderDetailsSchema = z.object({
         description: z.string().optional().describe(
             "The description of the shipping cost. It cannot exceed 60 characters."
         ),
-    }).describe("The shipping details for the order"),
+    }).optional().describe("The shipping details for the order"),
     discount: z.object({
         offset: z.number().describe("Must be 100"),
         value: z.number().positive().int().describe(
@@ -70,7 +70,7 @@ const orderDetailsSchema = z.object({
             "Text used for defining incentivised orders. \
             If order is incentivised, define this information. Max character limit is 60 characters"
         ),
-    }).describe("The discount details for the order"),
+    }).optional().describe("The discount details for the order"),
 }).describe("The order details for the order");
 
 const orderDetailsOpenAIFunction = {
