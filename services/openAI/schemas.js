@@ -8,9 +8,8 @@ const orderDetailsSchema = z.object({
              can only contain English letters, numbers, underscores, dashes, or dots, and should not exceed 35 characters."
     ),
     total_amount: z.object({
-        offset: z.number().describe("Must be 100"),
-        value: z.number().positive().int().describe(
-            "The total amount of the order or invoice multiplied by 100. It should be a positive integer. \
+        value: z.number().describe(
+            "The total amount of the order or invoice. \
             total_amount.value must be equal to subtotal.value + tax.value + shipping.value - discount.value."
         ),
     }).describe("The total amount details for the order"),
@@ -20,13 +19,11 @@ const orderDetailsSchema = z.object({
                 retailer_id: z.string().describe("Generate unique identifier for an item in the order."),
                 name: z.string().describe("The item's name to be displayed to the user. Cannot exceed 60 characters"),
                 amount: z.object({
-                  offset: z.number().describe("Must be 100"),
-                  value: z.number().positive().int().describe("The price per item in the order multiplied by 100. It should be a positive integer."),
+                  value: z.number().describe("The price per item in the order."),
                 }).describe("The amount details per item of the order"),
                 sale_amount: z.object({
-                  offset: z.number().describe("Must be 100"),
-                  value: z.number().positive().int().describe(
-                    "The discounted price per item multiplied by 100. This should be less than the original amount. \
+                  value: z.number().describe(
+                    "The discounted price per item. This should be less than the original amount. \
                     If included, this field is used to calculate the subtotal amount"
                   ),
                 }).optional().describe("The sale amount details for the item"),
@@ -34,34 +31,29 @@ const orderDetailsSchema = z.object({
             })
         ).describe("The list of items for this order"),
     subtotal: z.object({
-        offset: z.number().describe("Must be 100"),
-        value: z.number().positive().int().describe(
-            "The value must be equal to sum of (amount per item multiplied by quantity per item) multiplied by 100. \
-            It should be a positive integer."
+        value: z.number().describe(
+            "The value must be equal to sum of (amount per item multiplied by quantity per item)"
         ),
     }).describe("The subtotal details for the order"),
     tax: z.object({
-        offset: z.number().describe("Must be 100"),
-        value: z.number().positive().int().describe(
-            "The tax amount for the order multiplied by 100. It should be a positive integer."
+        value: z.number().describe(
+            "The tax amount for the order."
         ),
         description: z.string().optional().describe(
             "The description of the tax. It cannot exceed 60 characters."
         ),
     }).optional().describe("The tax details for the order"),
     shipping: z.object({
-        offset: z.number().describe("Must be 100"),
-        value: z.number().positive().int().describe(
-            "The shipping cost for the order multiplied by 100. It should be a positive integer."
+        value: z.number().describe(
+            "The shipping cost for the order."
         ),
         description: z.string().optional().describe(
             "The description of the shipping cost. It cannot exceed 60 characters."
         ),
     }).optional().describe("The shipping details for the order"),
     discount: z.object({
-        offset: z.number().describe("Must be 100"),
-        value: z.number().positive().int().describe(
-            "The discount amount for the order multiplied by 100. It should be a positive integer."
+        value: z.number().describe(
+            "The discount amount for the order."
         ),
         description: z.string().optional().describe(
             "The description of the discount. It cannot exceed 60 characters."
@@ -85,25 +77,25 @@ const tools = [];
 // Create a new DynamicStructuredTool instance named "orderTool"  to retrieve order details
 const orderTool = new DynamicStructuredTool({
   name: "generateOrderDetailsObject",
-  description: "A tool to generate an object populated with the order details. The input is the order details.",
+  description: "A tool to generate an object populated with order details. The input is from the order details.",
   schema: orderDetailsSchema,
   func: async ({
         reference_id,
-        total_amount: { offset, value },
+        total_amount: { value },
         items: items,
-        subtotal: { offset: subtotalOffset, value: subtotalValue },
-        tax: { offset: taxOffset, value: taxValue, description: taxDescription },
-        shipping: { offset: shippingOffset, value: shippingValue, description: shippingDescription },
-        discount: { offset: discountOffset, value: discountValue, description: discountDescription, discount_program_name }
+        subtotal: { value: subtotalValue },
+        tax: { value: taxValue, description: taxDescription },
+        shipping: { value: shippingValue, description: shippingDescription },
+        discount: { value: discountValue, description: discountDescription, discount_program_name }
     }) => {
     return {
       reference_id: reference_id,
-      total_amount: { offset: offset, value: value },
+      total_amount: { value: value },
       items: items,
-      subtotal: { offset: subtotalOffset, value: subtotalValue },
-      tax: { offset: taxOffset, value: taxValue, description: taxDescription },
-      shipping: { offset: shippingOffset, value: shippingValue, description: shippingDescription },
-      discount: { offset: discountOffset, value: discountValue, description: discountDescription, discount_program_name }
+      subtotal: { value: subtotalValue },
+      tax: { value: taxValue, description: taxDescription },
+      shipping: { value: shippingValue, description: shippingDescription },
+      discount: { value: discountValue, description: discountDescription, discount_program_name }
     }
   }
 })
