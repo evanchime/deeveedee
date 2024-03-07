@@ -77,7 +77,8 @@ const tools = [];
 // Create a new DynamicStructuredTool instance named "orderTool"  to retrieve order details
 const orderTool = new DynamicStructuredTool({
   name: "generateOrderDetailsObject",
-  description: "A tool to generate an object populated with order details. The input is from the order details.",
+  description: "A tool to generate a node.js object. The object will have as properties, the order details. \
+  The input is generated from the order details.",
   schema: orderDetailsSchema,
   func: async ({
         reference_id,
