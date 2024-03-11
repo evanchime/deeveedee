@@ -68,7 +68,7 @@ const createAssistant = async () => {
             name: "Helpful Assistant",
             instructions: context.orderBot,
             model: "gpt-4-turbo-preview",
-            tools: [{type: "function", function: "generateOrderDetailsObjectFunctionJson"}],
+            tools: [{type: "function", function: generateOrderDetailsObjectFunctionJson}],
         })
         return assistant
     } catch (error) {
