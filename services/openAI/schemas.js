@@ -68,7 +68,7 @@ const orderDetailsSchema = z.object({
 const orderDetailsOpenAIFunction = {
   name: "orderDetails",
   description: "Return the order details for the order.",
-  parameters: zodToJsonSchema(orderDetailsSchema, "orderDetailsSchema"),
+  parameters: zodToJsonSchema(orderDetailsSchema/*, "orderDetailsSchema"*/),
 }
 
 // Create an empty array to store tools
@@ -103,6 +103,8 @@ const orderTool = new DynamicStructuredTool({
 
 // Add the orderTool to the tools array
 tools.push(orderTool);
+
+console.log(orderDetailsOpenAIFunction)
 
 module.exports = {
     orderDetailsSchema, orderDetailsOpenAIFunction, tools, orderTool
