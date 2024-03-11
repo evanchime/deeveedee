@@ -25,32 +25,34 @@ const getCompletion = async (sessData, text) => {
     
         while (run.status !== "completed") {
 
-            if (run.status === "requires_action") {
+            // if (run.status === "requires_action") {
 
-                const toolOutputs = []
-                run.required_action.submit_tool_outputs.tool_calls.forEach(async (tool_call) => {
-                    const functionToCall = tool_call.function.name
-                    const functionArgs = JSON.parse(tool_call.function.arguments)
-                    const functionArgsArr = Object.values(functionArgs)
-                    const functionResponse = await functionToCall.apply(null, functionArgsArr)
-                    toolOutputs.push({ tool_call_id: tool_call.id, output: JSON.stringify(functionResponse) })
-                });
-                run = await openai.beta.threads.runs.submitToolOutputs(
-                    sessData.thread.id,
-                    run.id,
-                    {
-                        tool_outputs: toolOutputs
-                    }
-                    );
+            //     const toolOutputs = []
+            //     run.required_action.submit_tool_outputs.tool_calls.forEach(async (tool_call) => {
+            //         const functionToCall = tool_call.function.name
+            //         const functionArgs = JSON.parse(tool_call.function.arguments)
+            //         const functionArgsArr = Object.values(functionArgs)
+            //         const functionResponse = await functionToCall.apply(null, functionArgsArr)
+            //         toolOutputs.push({ tool_call_id: tool_call.id, output: JSON.stringify(functionResponse) })
+            //     });
+            //     run = await openai.beta.threads.runs.submitToolOutputs(
+            //         sessData.thread.id,
+            //         run.id,
+            //         {
+            //             tool_outputs: toolOutputs
+            //         }
+            //         );
                     
-                continue
+            //     continue
 
-            }else{
+            // }else{
                 
-                await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 1/2 second
-                run = await openai.beta.threads.runs.retrieve(sessData.thread.id, run.id)
+            //     await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 1/2 second
+            //     run = await openai.beta.threads.runs.retrieve(sessData.thread.id, run.id)
             
-            }
+            // }
+            await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 1/2 second
+            run = await openai.beta.threads.runs.retrieve(sessData.thread.id, run.id)
         }
         
             
