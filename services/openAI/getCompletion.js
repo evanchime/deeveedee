@@ -29,7 +29,8 @@ const getCompletion = async (sessData, text) => {
 
                 const toolOutputs = []
                 run.required_action.submit_tool_outputs.tool_calls.forEach(async (tool_call) => {
-                    const functionToCall = tool_call.function.name
+                    const functionToName = tool_call.function.name
+                    const functionToCall = availableTools[functionToName]
                     const functionArgs = JSON.parse(tool_call.function.arguments)
                     const functionArgsArr = Object.values(functionArgs)
                     const functionResponse = await functionToCall.apply(null, functionArgsArr)
@@ -87,6 +88,8 @@ const createThread = async () => {
         throw error;
     }
 }
+
+
 
 const generateOrderDetailsObjectFunctionJson = {
     "name": "generateOrderDetailsObject",
@@ -235,6 +238,10 @@ const generateOrderDetailsObject = async ({
     }
     console.log(orderdetails);
 }
+
+const availableTools = {
+    generateOrderDetailsObject,
+};
 
 
 module.exports = { 
