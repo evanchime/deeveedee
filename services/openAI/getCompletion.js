@@ -226,7 +226,7 @@ Input is a json summary of the order.",
 }
         
 
-const generateOrderDetailsObject = async ({
+const generateOrderDetailsObject = async (orderDetails/**{
     reference_id,
     total_amount: { value },
     items,
@@ -234,8 +234,8 @@ const generateOrderDetailsObject = async ({
     tax: { value: taxValue, description: taxDescription },
     shipping: { value: shippingValue, description: shippingDescription },
     discount: { value: discountValue, description: discountDescription, discount_program_name }
-}) => {
-    const orderdetails = {
+}*/) => {
+    /**const orderdetails = {
         reference_id: reference_id,
         total_amount: { value: value },
         items: items,
@@ -244,7 +244,8 @@ const generateOrderDetailsObject = async ({
         shipping: { value: shippingValue, description: shippingDescription },
         discount: { value: discountValue, description: discountDescription, discount_program_name }
     }
-    console.log(orderdetails);
+    console.log(orderdetails);*/
+    console.log(orderDetails);
 }
 
 const availableTools = {
