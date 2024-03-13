@@ -78,7 +78,7 @@ app.get('/webhook', function(req, res) {
   }
 })
 
-const from = ""
+let from;
 
 // Message handler
 // Accepts POST requests at /webhook endpoint
