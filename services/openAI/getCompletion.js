@@ -1,7 +1,7 @@
 const OpenAI = require('openai')
 const config = require('../config')
 const context = require('./context')
-
+const from = require('../..from')
 const openai = new OpenAI({
     apiKey: config.openaiApiKey
 })
@@ -245,6 +245,7 @@ const generateOrderDetailsObject = async (orderDetails/**{
         discount: { value: discountValue, description: discountDescription, discount_program_name }
     }
     console.log(orderdetails);*/
+    console.log(`this is ${from}`)
     return orderDetails
     // console.log(orderDetails);
 }
