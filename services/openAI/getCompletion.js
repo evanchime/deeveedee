@@ -34,7 +34,7 @@ const getCompletion = async (sessData, text) => {
                     const functionArgs = JSON.parse(tool_call.function.arguments)
                     const functionArgsArr = Object.values(functionArgs)
                     const functionResponse = await functionToCall.apply(null, functionArgsArr)
-                    toolOutputs.push({ "tool_call_id": tool_call.id, "output": JSON.stringify(functionResponse) })
+                    toolOutputs.push({ tool_call_id: tool_call.id, output: JSON.stringify(functionResponse) })
                 });
                 run = await openai.beta.threads.runs.submitToolOutputs(
                     sessData.thread.id,
@@ -245,7 +245,8 @@ const generateOrderDetailsObject = async (orderDetails/**{
         discount: { value: discountValue, description: discountDescription, discount_program_name }
     }
     console.log(orderdetails);*/
-    console.log(orderDetails);
+    return orderDetails
+    // console.log(orderDetails);
 }
 
 const availableTools = {
