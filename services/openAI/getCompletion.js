@@ -1,7 +1,7 @@
 const OpenAI = require('openai')
 const config = require('../config')
 const context = require('./context')
-const from = require('../..from')
+const from = require('../../index')
 const openai = new OpenAI({
     apiKey: config.openaiApiKey
 })
