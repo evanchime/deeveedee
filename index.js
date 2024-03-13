@@ -78,6 +78,8 @@ app.get('/webhook', function(req, res) {
   }
 })
 
+const from = ""
+
 // Message handler
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', async (req, res) => {
@@ -93,7 +95,7 @@ if (req.body.object) {
       req.body.entry[0].changes[0].value.messages
     ) {
       // Extract the sender's phone number from the webhook payload
-      let from = req.body.entry[0].changes[0].value.messages[0].from
+      from = req.body.entry[0].changes[0].value.messages[0].from
       // Extract the message text from the webhook payload
       let msg_body
       if (req.body.entry[0].changes[0].value.messages[0].text) {
@@ -163,7 +165,7 @@ app.listen(port, ()=>{
 
   
             
-        
+module.exports = from      
 
 
 
