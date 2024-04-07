@@ -11,8 +11,8 @@ const app = express()
 
 //Initialize client.
 const redisClient = new Redis({
-  host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
-  port: 11258,
+  host: 'redis-17994.c10.us-east-1-2.ec2.cloud.redislabs.com',
+  port: 17994,
   password: config.redisStoreSecret,
   // tls: {
   //   rejectUnauthorized: false
