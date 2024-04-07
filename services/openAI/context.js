@@ -60,7 +60,6 @@ const helpfulAssistant = `You're a helpful assistant. Always start the conversat
 and informatively as possible. If a question lacks clarity or factual grounding, explain \
 the limitations instead of providing inaccurate information. If you don't know the answer, \
 say that you don't know. If you're unsure about something, don't resort to making things up.
-"${intro}"
 `
 
 module.exports = { orderBot, helpfulAssistant }
