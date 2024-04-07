@@ -10,29 +10,29 @@ const Redis = require("ioredis")
 const app = express()
 
 //Initialize client.
-const redisClient = new Redis({
-  host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
-  port: 11258,
-  password: config.redisStoreSecret,
-  // tls: {
-  //   rejectUnauthorized: false
-  // }
-})
-  .on("error", console.error)
-  .on("connect", () => console.log("Redis client connected"))
-  .on("ready", () => console.log("Redis client ready"))
-  .on("reconnecting", () => console.log("Redis client reconnecting"))
-  .on("end", () => console.log("Redis client disconnected"))
-
-  
-
-// Initialize client.
-// const redisClient = new Redis()
+// const redisClient = new Redis({
+//   host: 'redis-11258.c281.us-east-1-2.ec2.cloud.redislabs.com',
+//   port: 11258,
+//   password: config.redisStoreSecret,
+//   // tls: {
+//   //   rejectUnauthorized: false
+//   // }
+// })
 //   .on("error", console.error)
 //   .on("connect", () => console.log("Redis client connected"))
 //   .on("ready", () => console.log("Redis client ready"))
 //   .on("reconnecting", () => console.log("Redis client reconnecting"))
 //   .on("end", () => console.log("Redis client disconnected"))
+
+  
+
+// Initialize client.
+const redisClient = new Redis()
+  .on("error", console.error)
+  .on("connect", () => console.log("Redis client connected"))
+  .on("ready", () => console.log("Redis client ready"))
+  .on("reconnecting", () => console.log("Redis client reconnecting"))
+  .on("end", () => console.log("Redis client disconnected"))
 
 
 // // Initialize client.
@@ -78,7 +78,6 @@ app.get('/webhook', function(req, res) {
   }
 })
 
-let from;
 
 // Message handler
 // Accepts POST requests at /webhook endpoint
@@ -95,7 +94,7 @@ if (req.body.object) {
       req.body.entry[0].changes[0].value.messages
     ) {
       // Extract the sender's phone number from the webhook payload
-      from = req.body.entry[0].changes[0].value.messages[0].from
+      let from = req.body.entry[0].changes[0].value.messages[0].from
       // Extract the message text from the webhook payload
       let msg_body
       if (req.body.entry[0].changes[0].value.messages[0].text) {
@@ -162,10 +161,3 @@ if (req.body.object) {
 app.listen(port, ()=>{
     console.log(`Server listening on port ${port}...`)
 })
-
-  
-            
-module.exports = from      
-
-
-
