@@ -24,15 +24,17 @@ const getCompletion = async (sessData, text) => {
         //     { assistant_id: sessData.assistant.id }
         // )
     
-            await openai.beta.threads.runs
-            .stream(sessData.thread.id, {
-                assistant_id: sessData.assistant.id,
-            })
-            // .on('messageCreated', (message) => {whatsAppmessage(sessData.from, message.content.text)})
-            // .on('messageDelta', (delta, snapshot) => {whatsAppmessage(sessData.from, delta.value.text)})
-            // .on('messageDone', (message: Message) => ...)
-            .on('textCreated', (text) => process.stdout.write('\nassistant > '))
-            .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
+        const run = openai.beta.threads.runs
+        .stream(sessData.thread.id, {
+            assistant_id: sessData.assistant.id,
+        })
+        // .on('messageCreated', (message) => {whatsAppmessage(sessData.from, message.content.text)})
+        // .on('messageDelta', (delta, snapshot) => {whatsAppmessage(sessData.from, delta.value.text)})
+        // .on('messageDone', (message: Message) => ...)
+        .on('textCreated', (text) => process.stdout.write('\nassistant > '))
+        .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
+        const result = await run.finalRun();
+        console.log('Run Result' + result);
     }
 }
 
