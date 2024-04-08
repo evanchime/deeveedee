@@ -24,17 +24,34 @@ const getCompletion = async (sessData, text) => {
         //     { assistant_id: sessData.assistant.id }
         // )
     
-        const run = openai.beta.threads.runs
-        .stream(sessData.thread.id, {
-            assistant_id: sessData.assistant.id,
-        })
-        // .on('messageCreated', (message) => {whatsAppmessage(sessData.from, message.content.text)})
-        // .on('messageDelta', (delta, snapshot) => {whatsAppmessage(sessData.from, delta.value.text)})
-        // .on('messageDone', (message: Message) => ...)
-        .on('textCreated', (text) => process.stdout.write('\nassistant > '))
-        .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
-        const result = await run.finalRun();
-        console.log('Run Result' + result);
+        // const run = openai.beta.threads.runs
+        // .stream(sessData.thread.id, {
+        //     assistant_id: sessData.assistant.id,
+        // })
+        // // .on('messageCreated', (message) => {whatsAppmessage(sessData.from, message.content.text)})
+        // // .on('messageDelta', (delta, snapshot) => {whatsAppmessage(sessData.from, delta.value.text)})
+        // // .on('messageDone', (message: Message) => ...)
+        // .on('textCreated', (text) => process.stdout.write('\nassistant > '))
+        // .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
+        // const result = await run.finalRun();
+        // console.log('Run Result' + result);
+
+        const stream = await openai.beta.threads.runs.create(
+            sessData.thread.id,
+            { 
+                assistant_id: sessData.assistant.id,
+                stream: true
+            }
+        )
+
+        for await (const event of stream) {
+            if (event.event === 'thread.message.delta') {
+              const chunk = event.data.delta.content?.[0];
+              if (chunk && 'text' in chunk && chunk.text.value) {
+                process.stdout.write(chunk.text.value);
+              }
+            }
+        }
     }
 }
 
