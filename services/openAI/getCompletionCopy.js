@@ -45,12 +45,13 @@ const getCompletion = async (sessData, text) => {
         )
 
         for await (const event of stream) {
-            if (event.event === 'thread.message.delta') {
-              const chunk = event.data.delta.content?.[0];
-              if (chunk && 'text' in chunk && chunk.text.value) {
-                whatsAppmessage(from, chunk.text.value);
-              }
-            }
+            console.log(event)
+            // if (event.event === 'thread.message.delta') {
+            //   const chunk = event.data.delta.content?.[0];
+            //   if (chunk && 'text' in chunk && chunk.text.value) {
+            //     whatsAppmessage(from, chunk.text.value);
+            //   }
+            // }
         }
     }
 }
