@@ -45,11 +45,12 @@ const getCompletion = async (sessData, text) => {
         )
 
         for await (const event of stream) {
-            const fs = require('fs');
-            fs.appendFile('message.txt', event, function (err) {
-                if (err) throw err;
-                console.log('Data appended successfully!');
-            });
+            console.log(event)
+            // const fs = require('fs');
+            // fs.appendFile('message.txt', event, function (err) {
+            //     if (err) throw err;
+            //     console.log('Data appended successfully!');
+            // });
 
             // if (event.event === 'thread.message.delta') {
             //     console.log("we have it")
