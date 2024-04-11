@@ -14,10 +14,10 @@ const getCompletion = async (sessData, text) => {
         return "Sorry, we only support text messages for now.\uD83D\uDE0A"
         
     } else {//Otherwise, send the message to OpenAI for processing
-        await openai.beta.threads.messages.create(
-            sessData.thread.id,
-            { role: "user", content: text }
-        )
+        // await openai.beta.threads.messages.create(
+        //     sessData.thread.id,
+        //     { role: "user", content: text }
+        // )
         //openai.beta.threads.createAndRunStream(sessData.thread.id,
         //     { assistant_id: sessData.assistant.id });
     
@@ -35,8 +35,9 @@ const getCompletion = async (sessData, text) => {
         // // .on('messageDone', (message: Message) => ...)
 
         const run = openai.beta.threads.runs
-        .createAndStream(sessData.thread.id, {
+        .createAndRunStream(sessData.thread.id, {
             assistant_id: sessData.assistant.id,
+            messages: [{ role: "user", content: text }]
         })
         .on('textCreated', (text) => process.stdout.write('\nassistant > '))
         .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
