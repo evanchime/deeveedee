@@ -35,7 +35,7 @@ const getCompletion = async (sessData, text) => {
         // // .on('messageDone', (message: Message) => ...)
 
         const run = openai.beta.threads
-        .createAndStream(sessData.thread.id, {
+        .createAndRunStream(sessData.thread.id, {
             assistant_id: sessData.assistant.id,
             // messages: [{ role: "user", content: text }]
         })
