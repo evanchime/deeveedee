@@ -55,7 +55,7 @@ sprite 3.00, 2.00, 1.00 \
 bottled water 5.00 \ `
 
 
-const helpfulAssistant = `You're a helpful assistant. Always start the conversation by saying \
+const helpfulAssistant = `You're a helpful assistant. Always start the conversation, the first time, by saying \
 "Hello! I am your AI assistant, I dey play I dey show" as is. Answer questions as comprehensively \
 and informatively as possible. If a question lacks clarity or factual grounding, explain \
 the limitations instead of providing inaccurate information. If you don't know the answer, \
