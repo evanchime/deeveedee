@@ -34,15 +34,15 @@ const getCompletion = async (sessData, text) => {
         // // .on('messageDelta', (delta, snapshot) => {whatsAppmessage(sessData.from, delta.value.text)})
         // // .on('messageDone', (message: Message) => ...)
 
-        // const run = openai.beta.threads
-        // .createAndRunStream(sessData.thread.id, {
-        //     assistant_id: sessData.assistant.id,
-        //     messages: [{ role: "user", content: text }]
-        // })
-        // .on('textCreated', (text) => process.stdout.write('\nassistant > '))
-        // .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
-        // const result = await run.finalRun();
-        // console.log('Run Result' + result);
+        const run = openai.beta.threads
+        .createAndStream(sessData.thread.id, {
+            assistant_id: sessData.assistant.id,
+            // messages: [{ role: "user", content: text }]
+        })
+        .on('textCreated', (text) => process.stdout.write('\nassistant > '))
+        .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
+        const result = await run.finalRun();
+        console.log('Run Result' + result);
 
         const stream = await openai.beta.threads.runs.create(
             sessData.thread.id,
@@ -63,24 +63,6 @@ const getCompletion = async (sessData, text) => {
         //     // }
         // }
 
-        stream.on('data', (event) => {
-            console.log(event.data);
-            if (event.event === 'thread.message.delta') {
-              console.log("we have it");
-              const chunk = event.data.delta.content?.[0];
-              if (chunk && 'text' in chunk && chunk.text.value) {
-                console.log(chunk.text.value);
-              }
-            }
-          });
-          
-          stream.on('end', () => {
-            console.log('Stream ended');
-          });
-          
-          stream.on('error', (err) => {
-            console.error('Error processing stream:', err);
-          });
           
     }
 }
