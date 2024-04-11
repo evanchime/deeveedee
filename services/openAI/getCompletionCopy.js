@@ -18,6 +18,8 @@ const getCompletion = async (sessData, text) => {
             sessData.thread.id,
             { role: "user", content: text }
         )
+        //openai.beta.threads.createAndRunStream(sessData.thread.id,
+        //     { assistant_id: sessData.assistant.id });
     
         // let run = await openai.beta.threads.runs.create(
         //     sessData.thread.id,
@@ -31,35 +33,34 @@ const getCompletion = async (sessData, text) => {
         // // .on('messageCreated', (message) => {whatsAppmessage(sessData.from, message.content.text)})
         // // .on('messageDelta', (delta, snapshot) => {whatsAppmessage(sessData.from, delta.value.text)})
         // // .on('messageDone', (message: Message) => ...)
-        // .on('textCreated', (text) => process.stdout.write('\nassistant > '))
-        // .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
+
+        const run = openai.beta.threads.runs
+        .createAndStream(sessData.thread.id, {
+            assistant_id: sessData.assistant.id,
+        })
+        .on('textCreated', (text) => process.stdout.write('\nassistant > '))
+        .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
         // const result = await run.finalRun();
         // console.log('Run Result' + result);
 
-        const stream = await openai.beta.threads.runs.create(
-            sessData.thread.id,
-            { 
-                assistant_id: sessData.assistant.id,
-                stream: true
-            }
-        )
+        // const stream = await openai.beta.threads.runs.create(
+        //     sessData.thread.id,
+        //     { 
+        //         assistant_id: sessData.assistant.id,
+        //         stream: true
+        //     }
+        // )
 
-        for await (const event of stream) {
-            console.log(event)
-            // const fs = require('fs');
-            // fs.appendFile('message.txt', event, function (err) {
-            //     if (err) throw err;
-            //     console.log('Data appended successfully!');
-            // });
-
-            // if (event.event === 'thread.message.delta') {
-            //     console.log("we have it")
-            // //   const chunk = event.data.delta.content?.[0];
-            // //   if (chunk && 'text' in chunk && chunk.text.value) {
-            // //     whatsAppmessage(from, chunk.text.value);
-            // //   }
-            // }
-        }
+        // for await (const event of stream) {
+        //     console.log(event)
+        //     if (event.event === 'thread.message.delta') {
+        //         console.log("we have it")
+        //       const chunk = event.data.delta.content?.[0];
+        //       if (chunk && 'text' in chunk && chunk.text.value) {
+        //         whatsAppmessage(from, chunk.text.value);
+        //       }
+        //     }
+        // }
     }
 }
 
