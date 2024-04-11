@@ -34,7 +34,7 @@ const getCompletion = async (sessData, text) => {
         // // .on('messageDelta', (delta, snapshot) => {whatsAppmessage(sessData.from, delta.value.text)})
         // // .on('messageDone', (message: Message) => ...)
 
-        const run = openai.beta.threads.runs
+        const run = openai.beta.threads
         .createAndRunStream(sessData.thread.id, {
             assistant_id: sessData.assistant.id,
             messages: [{ role: "user", content: text }]
