@@ -14,10 +14,10 @@ const getCompletion = async (sessData, text) => {
         return "Sorry, we only support text messages for now.\uD83D\uDE0A"
         
     } else {//Otherwise, send the message to OpenAI for processing
-        // await openai.beta.threads.messages.create(
-        //     sessData.thread.id,
-        //     { role: "user", content: text }
-        // )
+        await openai.beta.threads.messages.create(
+            sessData.thread.id,
+            { role: "user", content: text }
+        )
         //openai.beta.threads.createAndRunStream(sessData.thread.id,
         //     { assistant_id: sessData.assistant.id });
     
@@ -34,34 +34,34 @@ const getCompletion = async (sessData, text) => {
         // // .on('messageDelta', (delta, snapshot) => {whatsAppmessage(sessData.from, delta.value.text)})
         // // .on('messageDone', (message: Message) => ...)
 
-        const run = openai.beta.threads
-        .createAndRunStream(sessData.thread.id, {
-            assistant_id: sessData.assistant.id,
-            messages: [{ role: "user", content: text }]
-        })
-        .on('textCreated', (text) => process.stdout.write('\nassistant > '))
-        .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
+        // const run = openai.beta.threads
+        // .createAndRunStream(sessData.thread.id, {
+        //     assistant_id: sessData.assistant.id,
+        //     messages: [{ role: "user", content: text }]
+        // })
+        // .on('textCreated', (text) => process.stdout.write('\nassistant > '))
+        // .on('textDelta', (textDelta, snapshot) => process.stdout.write(textDelta.value))
         // const result = await run.finalRun();
         // console.log('Run Result' + result);
 
-        // const stream = await openai.beta.threads.runs.create(
-        //     sessData.thread.id,
-        //     { 
-        //         assistant_id: sessData.assistant.id,
-        //         stream: true
-        //     }
-        // )
+        const stream = await openai.beta.threads.runs.create(
+            sessData.thread.id,
+            { 
+                assistant_id: sessData.assistant.id,
+                stream: true
+            }
+        )
 
-        // for await (const event of stream) {
-        //     console.log(event)
-        //     if (event.event === 'thread.message.delta') {
-        //         console.log("we have it")
-        //       const chunk = event.data.delta.content?.[0];
-        //       if (chunk && 'text' in chunk && chunk.text.value) {
-        //         whatsAppmessage(from, chunk.text.value);
-        //       }
-        //     }
-        // }
+        for await (const event of stream) {
+            console.log(event)
+            // if (event.event === 'thread.message.delta') {
+            //     console.log("we have it")
+            //   const chunk = event.data.delta.content?.[0];
+            //   if (chunk && 'text' in chunk && chunk.text.value) {
+            //     whatsAppmessage(from, chunk.text.value);
+            //   }
+            // }
+        }
     }
 }
 
