@@ -52,16 +52,36 @@ const getCompletion = async (sessData, text) => {
             }
         )
 
-        for await (const event of stream) {
-            console.log(event.data)
-            // if (event.event === 'thread.message.delta') {
-            //     console.log("we have it")
-            //   const chunk = event.data.delta.content?.[0];
-            //   if (chunk && 'text' in chunk && chunk.text.value) {
-            //     whatsAppmessage(from, chunk.text.value);
-            //   }
-            // }
-        }
+        // for await (const event of stream) {
+        //     console.log(event.data)
+        //     // if (event.event === 'thread.message.delta') {
+        //     //     console.log("we have it")
+        //     //   const chunk = event.data.delta.content?.[0];
+        //     //   if (chunk && 'text' in chunk && chunk.text.value) {
+        //     //     whatsAppmessage(from, chunk.text.value);
+        //     //   }
+        //     // }
+        // }
+
+        stream.on('data', (event) => {
+            console.log(event.data);
+            if (event.event === 'thread.message.delta') {
+              console.log("we have it");
+              const chunk = event.data.delta.content?.[0];
+              if (chunk && 'text' in chunk && chunk.text.value) {
+                console.log(chunk.text.value);
+              }
+            }
+          });
+          
+          stream.on('end', () => {
+            console.log('Stream ended');
+          });
+          
+          stream.on('error', (err) => {
+            console.error('Error processing stream:', err);
+          });
+          
     }
 }
 
