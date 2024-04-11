@@ -53,7 +53,7 @@ const getCompletion = async (sessData, text) => {
         )
 
         for await (const event of stream) {
-            console.log(event)
+            console.log(event.data)
             // if (event.event === 'thread.message.delta') {
             //     console.log("we have it")
             //   const chunk = event.data.delta.content?.[0];
