@@ -3,9 +3,10 @@ const config = require('../config')
 const context = require('./context')
 const from = require('../../indexCopy')
 const whatsAppmessage = require('../whatsappMessage')
-const openai = new OpenAI({
-    apiKey: config.openaiApiKey
-})
+// const openai = new OpenAI({
+//     apiKey: config.openaiApiKey
+// })
+const openai = new OpenAI();
 
 const getCompletion = async (sessData, text) => {
 
