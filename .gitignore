@@ -9,3 +9,6 @@ npm-debug.log
 
 # Environment variables configuration
 set_config_var.sh
+
+# Miscellaneous
+services/openai/testing
