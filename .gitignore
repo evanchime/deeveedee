@@ -12,3 +12,4 @@ set_config_var.sh
 
 # Miscellaneous
 services/openai/testing
+app.js
