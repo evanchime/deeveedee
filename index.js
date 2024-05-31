@@ -11,38 +11,26 @@ const app = express()
 
 //Initialize client.
 const redisClient = new Redis({
-  host: 'redis-17994.c10.us-east-1-2.ec2.cloud.redislabs.com',
-  port: 17994,
+  host: config.redisStoreHost,
+  port: config.redisStorePort,
   password: config.redisStoreSecret,
   // tls: {
   //   rejectUnauthorized: false
   // }
 })
-  .on("error", console.error)
-  .on("connect", () => console.log("Redis client connected"))
-  .on("ready", () => console.log("Redis client ready"))
-  .on("reconnecting", () => console.log("Redis client reconnecting"))
-  .on("end", () => console.log("Redis client disconnected"))
+.on("error", console.error)
+.on("connect", () => console.log("Redis client connected"))
+.on("ready", () => console.log("Redis client ready"))
+.on("reconnecting", () => console.log("Redis client reconnecting"))
+.on("end", () => console.log("Redis client disconnected"))
 
-  
-
-// Initialize client.
-// const redisClient = new Redis()
-//   .on("error", console.error)
-//   .on("connect", () => console.log("Redis client connected"))
-//   .on("ready", () => console.log("Redis client ready"))
-//   .on("reconnecting", () => console.log("Redis client reconnecting"))
-//   .on("end", () => console.log("Redis client disconnected"))
-
-
-// // Initialize client.
-// const redisClient = new Redis(process.env.REDIS_URL)
-// .on("error", console.error)
-// .on("connect", () => console.log("Redis client connected"))
-// .on("ready", () => console.log("Redis client ready"))
-// .on("reconnecting", () => console.log("Redis client reconnecting"))
-// .on("end", () => console.log("Redis client disconnected"))
-
+  // Initialize client locally.
+  // const redisClient = new Redis()
+  //   .on("error", console.error)
+  //   .on("connect", () => console.log("Redis client connected"))
+  //   .on("ready", () => console.log("Redis client ready"))
+  //   .on("reconnecting", () => console.log("Redis client reconnecting"))
+  //   .on("end", () => console.log("Redis client disconnected"))
 
 // Log response status, request method and url
 app.use(({ method, url }, rsp, next) => {
