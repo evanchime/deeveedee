@@ -11,12 +11,7 @@ const app = express()
 
 //Initialize client.
 const redisClient = new Redis({
-  host: config.redisStoreHost,
-  port: config.redisStorePort,
-  password: config.redisStoreSecret
-  // tls: {
-  //   rejectUnauthorized: false
-  // }
+  url: config.redisUrl,
 })
 .on("error", console.error)
 .on("connect", () => console.log("Redis client connected")) 
