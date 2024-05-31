@@ -13,13 +13,13 @@ const app = express()
 const redisClient = new Redis({
   host: config.redisStoreHost,
   port: config.redisStorePort,
-  password: config.redisStoreSecret,
+  password: config.redisStoreSecret
   // tls: {
   //   rejectUnauthorized: false
   // }
 })
 .on("error", console.error)
-.on("connect", () => console.log("Redis client connected"))
+.on("connect", () => console.log("Redis client connected")) 
 .on("ready", () => console.log("Redis client ready"))
 .on("reconnecting", () => console.log("Redis client reconnecting"))
 .on("end", () => console.log("Redis client disconnected"))
