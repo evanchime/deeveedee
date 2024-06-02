@@ -7,6 +7,7 @@ Welcome to Deeveedee. I Dey Play I Dey Show! This project aims to create a AI ch
 - [Getting Started with WhatsApp Business Cloud API](#getting-started-with-whatsapp-business-cloud-api)
 - [Installation](#installation)
 - [Usage](#usage)
+- [How to Set Up the Webhook](#how-to-set-up-the-webhook) 
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -16,7 +17,7 @@ First, open the WhatsApp Business Platform Cloud API Get Started Guide and follo
 1.  Add the WhatsApp product to your business app;
 2.  Add a recipient number;
 3.  Send a test message;
-4.  Configure a webhook to receive real time HTTP notifications. For this step, follow `How to Set Up the Webhook` below
+4.  Configure a webhook to receive real time HTTP notifications. For this step, follow [How to Set Up the Webhook](#how-to-set-up-the-webhook) below
 
 For the last step, you need to further follow the Sample Callback URL for Webhooks Testing Guide to create a free account on glitch.com to get your webhook's callback URL.
 
